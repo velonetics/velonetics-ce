@@ -231,9 +231,9 @@ require (
 	github.com/unrolled/secure v1.15.0 // indirect
 	github.com/valyala/fastrand v1.1.0 // indirect
 	github.com/velonetics/binder v1.0.0 // indirect
-	github.com/velonetics/flatmap v1.2.0 // indirect
-	github.com/velonetics/go-auth0/v2 v2.0.4 // indirect
-	github.com/velonetics/httpcache v1.1.1 // indirect
+	github.com/velonetics/flatmap v1.0.0 // indirect
+	github.com/velonetics/go-auth0/v2 v2.0.0 // indirect
+	github.com/velonetics/httpcache v1.0.0 // indirect
 	github.com/velonetics/lru v1.0.0 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.mongodb.org/mongo-driver/v2 v2.5.0 // indirect
