@@ -1,0 +1,38 @@
+name: Go
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Use published Velonetics modules (drop local replace)
+        run: |
+          awk '/^replace \(/,/^\)/{next} 1' go.mod > go.mod.ci
+          mv go.mod.ci go.mod
+          GOPROXY=direct go mod tidy
+
+      - name: Fetch JSON schema
+        run: |
+          curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
+            https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.0/v2.13/velonetics.json
+
+      - name: Build
+        run: |
+          VERSION=$(grep '^VERSION :=' Makefile | awk '{print $3}')
+          go build -ldflags="-X github.com/velonetics/lura/v2/core.VeloneticsVersion=${VERSION}" \
+            -o velonetics ./cmd/velonetics-ce
+
+      - name: Unit tests
+        run: go test $(go list ./... | grep -vE '/tests$|/cmd/velonetics-integration')

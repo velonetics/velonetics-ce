@@ -1,0 +1,29 @@
+on:
+  schedule:
+    - cron: '0 10 * * *'
+name: Issue and PR hygiene
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          stale-issue-label: stale
+          stale-pr-label: stale
+          exempt-issue-labels: pinned,security
+          exempt-pr-labels: pinned,security
+  lock-threads:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: dessant/lock-threads@v5
+        with:
+          issue-inactive-days: 30
+          pr-inactive-days: 30
