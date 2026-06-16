@@ -23,7 +23,16 @@ jobs:
           cd /tmp/velonetics-websocket && go test -count=1 .
 
       - name: Download modules
-        run: GOPROXY=direct go mod tidy
+        run: |
+          for attempt in 1 2 3; do
+            if GOPROXY=direct go mod tidy; then
+              exit 0
+            fi
+            echo "go mod tidy failed (attempt ${attempt}), clearing VCS module cache..."
+            rm -rf "$(go env GOMODCACHE)/cache/vcs" || true
+            sleep 5
+          done
+          exit 1
 
       - name: Fetch JSON schema
         run: |
