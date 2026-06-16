@@ -22,6 +22,11 @@ jobs:
           git clone --depth 1 --branch v2.0.1 https://github.com/velonetics/velonetics-websocket.git /tmp/velonetics-websocket
           cd /tmp/velonetics-websocket && go test -count=1 .
 
+      - name: Fetch JSON schema
+        run: |
+          curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
+            https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.0/v2.13/velonetics.json
+
       - name: Build
         run: |
           VERSION=$(grep '^VERSION :=' Makefile | awk '{print $3}')
