@@ -92,9 +92,13 @@ ws-compose-test: cmd/velonetics-ce/schema/schema.json
 	./examples/websocket/scripts/smoke.sh
 	cd examples/websocket && docker compose down -v
 
+SCHEMA_URL := https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.0/v2.13/velonetics.json
+
 cmd/velonetics-ce/schema/schema.json:
 	@echo "Fetching v${SCHEMA_VERSION} schema"
-	@cp forks/velonetics-schema/v${SCHEMA_VERSION}/velonetics.json $@ 2>/dev/null || curl -fsSL -o $@ https://velonetics.io/schema/v${SCHEMA_VERSION}/velonetics.json || curl -fsSL -o $@ https://velonetics.io/schema/velonetics.json
+	@mkdir -p $(dir $@)
+	@cp forks/velonetics-schema/v${SCHEMA_VERSION}/velonetics.json $@ 2>/dev/null || \
+		curl -fsSL -o $@ $(SCHEMA_URL)
 
 # Build Velonetics using docker (defaults to whatever the golang container uses)
 build_on_docker: docker-builder-linux
