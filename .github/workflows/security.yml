@@ -60,18 +60,6 @@ jobs:
           echo "GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g')" >> $GITHUB_ENV
           echo "ALPINE_VERSION=$(grep -m 1 ALPINE_VERSION Makefile | sed 's/^.*= //g')" >> $GITHUB_ENV
 
-      - name: Download modules
-        run: |
-          for attempt in 1 2 3; do
-            if GOPROXY=direct go mod tidy; then
-              exit 0
-            fi
-            echo "go mod tidy failed (attempt ${attempt}), clearing VCS module cache..."
-            rm -rf "$(go env GOMODCACHE)/cache/vcs" || true
-            sleep 5
-          done
-          exit 1
-
       - name: Fetch JSON schema
         run: |
           curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
