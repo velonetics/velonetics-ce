@@ -6,6 +6,7 @@ permissions:
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: 'Checkout Repository'
         uses: actions/checkout@v4

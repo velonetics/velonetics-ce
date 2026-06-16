@@ -52,7 +52,7 @@ RPM_OPTS =--rpm-user $(USER) \
 	--before-remove builder/scripts/prerm.rpm \
   --after-remove builder/scripts/postrm.rpm
 
-all: test
+all: test test-websocket
 
 build: cmd/velonetics-ce/schema/schema.json
 	@echo "Building the binary..."
@@ -65,17 +65,53 @@ build: cmd/velonetics-ce/schema/schema.json
 test: build
 	go test -v ./tests
 
+test-websocket:
+	cd ../velonetics-websocket && go test ./...
+
+check-fixtures: build
+	./${BIN_NAME} check -c tests/fixtures/ws_direct.json
+	./${BIN_NAME} check -c tests/fixtures/ws_multiplex.json
+	./${BIN_NAME} check -c tests/fixtures/ws_jwt.json
+	./${BIN_NAME} check -c velonetics-ws.json
+
+ws-compose-up:
+	cd examples/websocket && docker compose up --build -d
+
+ws-compose-down:
+	cd examples/websocket && docker compose down
+
+ws-compose-smoke:
+	chmod +x examples/websocket/scripts/smoke.sh
+	./examples/websocket/scripts/smoke.sh
+
+ws-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off go mod vendor
+	cd examples/websocket/mock-backend && GOWORK=off go mod vendor
+	cd examples/websocket && docker compose up --build -d
+	chmod +x examples/websocket/scripts/smoke.sh
+	./examples/websocket/scripts/smoke.sh
+	cd examples/websocket && docker compose down -v
+
+SCHEMA_URL := https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.0/v2.13/velonetics.json
+
 cmd/velonetics-ce/schema/schema.json:
 	@echo "Fetching v${SCHEMA_VERSION} schema"
-	@cp forks/velonetics-schema/v${SCHEMA_VERSION}/velonetics.json $@ 2>/dev/null || curl -fsSL -o $@ https://velonetics.io/schema/v${SCHEMA_VERSION}/velonetics.json || curl -fsSL -o $@ https://velonetics.io/schema/velonetics.json
+	@mkdir -p $(dir $@)
+	@cp ../velonetics-schema/v${SCHEMA_VERSION}/velonetics.json $@ 2>/dev/null || \
+		curl -fsSL -o $@ $(SCHEMA_URL)
 
 # Build Velonetics using docker (defaults to whatever the golang container uses)
 build_on_docker: docker-builder-linux
 	docker run --rm -it -v "${PWD}:/app" -w /app velonetics/builder:${VERSION}-linux-generic sh -c "git config --global --add safe.directory /app && make -e build"
 
 # Build the container using the Dockerfile (alpine)
-docker:
-	docker build --no-cache --pull --build-arg GOLANG_VERSION=${GOLANG_VERSION} --build-arg ALPINE_VERSION=${ALPINE_VERSION} -t velonetics/velonetics:${VERSION} .
+docker: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off go mod vendor
+	docker build --pull \
+		--build-arg GOLANG_VERSION=${GOLANG_VERSION} \
+		--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+		--build-arg VERSION=${VERSION} \
+		-t velonetics/velonetics:${VERSION} .
 
 docker-builder:
 	docker build --no-cache --pull --build-arg GOLANG_VERSION=${GOLANG_VERSION} --build-arg ALPINE_VERSION=${ALPINE_VERSION} -t velonetics/builder:${VERSION} -f Dockerfile-builder .

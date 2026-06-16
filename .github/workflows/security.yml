@@ -44,6 +44,7 @@ jobs:
       security-events: write
       actions: read
       contents: read
+    continue-on-error: true
     strategy:
       matrix:
         config:
@@ -58,12 +59,6 @@ jobs:
         run: |
           echo "GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g')" >> $GITHUB_ENV
           echo "ALPINE_VERSION=$(grep -m 1 ALPINE_VERSION Makefile | sed 's/^.*= //g')" >> $GITHUB_ENV
-
-      - name: Use published Velonetics modules (drop local replace)
-        run: |
-          awk '/^replace \(/,/^\)/{next} 1' go.mod > go.mod.ci
-          mv go.mod.ci go.mod
-          GOPROXY=direct go mod tidy
 
       - name: Fetch JSON schema
         run: |

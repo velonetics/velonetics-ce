@@ -1,4 +1,5 @@
 /vendor
+examples/websocket/mock-backend/vendor
 bench_res
 sec_scan
 velonetics
@@ -6,4 +7,3 @@ velonetics-alpine
 cmd/velonetics-integration/velonetics-integration
 tests/fixtures/velonetics.json.final
 .vscode
-forks/
