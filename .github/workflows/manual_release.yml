@@ -5,7 +5,7 @@ on:
         type: string
         description: release id destination
         required: true
-name: Handle Release
+name: Manual Release Artifacts
 jobs:
   generate:
     name: Create release-artifacts

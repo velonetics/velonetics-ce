@@ -1,9 +1,16 @@
 on:
   release:
     types: [created, published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build (e.g. v2.0.1)
+        required: true
+        type: string
 name: Handle Release
 env:
   DOCKER_HUB_USER: niteesh20
+  RELEASE_TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
 jobs:
   gate:
     name: Check release credentials
@@ -21,13 +28,17 @@ jobs:
         run: |
           if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
             echo "docker=true" >> "$GITHUB_OUTPUT"
+            echo "Docker publish: enabled"
           else
             echo "docker=false" >> "$GITHUB_OUTPUT"
+            echo "Docker publish: skipped (set DOCKER_USERNAME and DOCKER_PASSWORD secrets)"
           fi
           if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ] && [ -n "$PGP_SIGNING_KEY" ] && [ -n "$PGP_PASSPHRASE" ]; then
             echo "artifacts=true" >> "$GITHUB_OUTPUT"
+            echo "Release artifacts: enabled"
           else
             echo "artifacts=false" >> "$GITHUB_OUTPUT"
+            echo "Release artifacts: skipped (requires Docker + PGP secrets)"
           fi
 
   builder:
@@ -38,6 +49,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
       - name: Set the environment variables
         run: |
           echo "GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g')" >> $GITHUB_ENV
@@ -51,25 +64,23 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: |
-            ${{ env.DOCKER_HUB_USER }}/builder
+          images: niteesh20/builder
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ env.RELEASE_TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.RELEASE_TAG }}
+            type=semver,pattern={{major}},value=${{ env.RELEASE_TAG }}
             type=raw,value=latest
       - name: Docker meta
         id: meta-linux-generic
         uses: docker/metadata-action@v4
         with:
-          images: |
-            ${{ env.DOCKER_HUB_USER }}/builder
+          images: niteesh20/builder
           flavor: |
             suffix=-linux-generic,onlatest=true
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ env.RELEASE_TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.RELEASE_TAG }}
+            type=semver,pattern={{major}},value=${{ env.RELEASE_TAG }}
             type=raw,value=latest-linux-generic
       - name: Build and push Velonetics plugin builder (Alpine)
         id: container-build
@@ -103,10 +114,10 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
       - name: Set release version
-        env:
-          TAG: ${{ github.event.release.tag_name }}
-        run: echo "RELEASE_VERSION=${TAG#v}" >> "$GITHUB_ENV"
+        run: echo "RELEASE_VERSION=${RELEASE_TAG#v}" >> "$GITHUB_ENV"
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v5
@@ -214,6 +225,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -235,15 +248,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push CE image to Docker Hub
-        env:
-          IMAGE_TAG: ${{ github.event.release.tag_name }}
         run: |
+          IMAGE_TAG="${RELEASE_TAG}"
           docker build --pull \
             --build-arg GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g') \
             --build-arg ALPINE_VERSION=$(grep -m 1 ALPINE_VERSION Makefile | sed 's/^.*= //g') \
             --build-arg VERSION=${IMAGE_TAG#v} \
-            -t "${{ env.DOCKER_HUB_USER }}/velonetics:${IMAGE_TAG}" \
-            -t "${{ env.DOCKER_HUB_USER }}/velonetics:${IMAGE_TAG#v}" \
+            -t "niteesh20/velonetics:${IMAGE_TAG}" \
+            -t "niteesh20/velonetics:${IMAGE_TAG#v}" \
             .
-          docker push "${{ env.DOCKER_HUB_USER }}/velonetics:${IMAGE_TAG}"
-          docker push "${{ env.DOCKER_HUB_USER }}/velonetics:${IMAGE_TAG#v}"
+          docker push "niteesh20/velonetics:${IMAGE_TAG}"
+          docker push "niteesh20/velonetics:${IMAGE_TAG#v}"
