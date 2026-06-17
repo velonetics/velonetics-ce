@@ -10,11 +10,7 @@ The [Dependency Review](https://docs.github.com/en/code-security/supply-chain-se
 
 After the graph is populated, PRs will get dependency-review results. Until then, the workflow is marked `continue-on-error: true` so it does not block merges.
 
-## Automatic snapshot submission
-
-`.github/workflows/dependency-submission.yml` submits Go dependency snapshots on each push to `main` using [go-dependency-submission-action](https://github.com/marketplace/actions/go-dependency-submission). The job uses `continue-on-error: true` if the org blocks `dependency-graph: write`.
-
-Once dependency review reports succeed on PRs, remove `continue-on-error: true` from `.github/workflows/dependency_review.yml`.
+> **Org policy note:** This repository's GitHub organization does not allow `dependency-graph: write` in Actions workflows, so automated dependency snapshot submission from CI is not possible. An org admin must enable **Dependency graph** in repository settings (step 1 above).
 
 ## Required secrets for release Docker publish
 
