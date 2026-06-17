@@ -1,13 +1,25 @@
-ARG GOLANG_VERSION
-ARG ALPINE_VERSION
+ARG GOLANG_VERSION=1.25.11
+ARG ALPINE_VERSION=3.23
+
+FROM alpine:${ALPINE_VERSION} AS musl-cache
+RUN apk update \
+ && apk add --no-cache curl ca-certificates \
+ && curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors \
+      --connect-timeout 30 --max-time 900 \
+      -o /aarch64-linux-musl-cross.tgz \
+      "https://github.com/troglobit/misc/releases/download/11-20211120/aarch64-linux-musl-cross.tgz" \
+ || curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors \
+      --connect-timeout 30 --max-time 900 \
+      -o /aarch64-linux-musl-cross.tgz \
+      "https://musl.cc/aarch64-linux-musl-cross.tgz"
 
 FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION}
 
-RUN apk --no-cache add tar make gcc musl-dev binutils-gold curl \
- && curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors --connect-timeout 30 --max-time 900 \
-    -o /aarch64-linux-musl-cross.tgz https://musl.cc/aarch64-linux-musl-cross.tgz \
- && tar zxf /aarch64-linux-musl-cross.tgz -C / \
- && rm -f /aarch64-linux-musl-cross.tgz \
- && apk del curl
+RUN apk update \
+ && apk add --no-cache tar make gcc musl-dev binutils-gold
+
+COPY --from=musl-cache /aarch64-linux-musl-cross.tgz /aarch64-linux-musl-cross.tgz
+RUN tar zxf /aarch64-linux-musl-cross.tgz -C / \
+ && rm -f /aarch64-linux-musl-cross.tgz
 
 ENV PATH="$PATH:/aarch64-linux-musl-cross/bin:/aarch64-linux-musl-cross/aarch64-linux-musl/bin"
