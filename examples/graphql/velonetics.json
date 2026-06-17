@@ -1,0 +1,116 @@
+{
+  "version": 3,
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "INFO",
+      "prefix": "[VELONETICS]",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    },
+    "security/cors": {
+      "allow_origins": ["*"],
+      "allow_methods": ["POST", "GET", "OPTIONS"],
+      "allow_headers": ["Origin", "Authorization", "Content-Type"],
+      "max_age": "12h"
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/review/{id_show}",
+      "method": "POST",
+      "backend": [
+        {
+          "host": ["http://mock-backend:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "mutation",
+              "query_path": "/etc/velonetics/graphql/mutations/review.graphql",
+              "variables": {
+                "ep": "JEDI",
+                "review": {
+                  "stars": 3,
+                  "commentary": "meh"
+                }
+              },
+              "operationName": "CreateReviewForEpisode"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/hero/{episode}",
+      "method": "GET",
+      "backend": [
+        {
+          "method": "GET",
+          "host": ["http://mock-backend:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "query",
+              "query_path": "/etc/velonetics/graphql/queries/hero.graphql",
+              "variables": {
+                "episode": "{episode}",
+                "withFriends": false
+              },
+              "operationName": "Hero"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/graphql",
+      "method": "POST",
+      "input_query_strings": ["query", "operationName", "variables"],
+      "backend": [
+        {
+          "host": ["http://mock-backend:4000"],
+          "url_pattern": "/graphql"
+        }
+      ]
+    },
+    {
+      "endpoint": "/user-data/{id_user}",
+      "backend": [
+        {
+          "group": "user",
+          "method": "GET",
+          "host": ["http://mock-backend:4000"],
+          "url_pattern": "/graphql/user",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "query",
+              "query_path": "/etc/velonetics/graphql/queries/user.graphql",
+              "variables": {
+                "user": "{id_user}"
+              },
+              "operationName": "getUserData"
+            }
+          }
+        },
+        {
+          "group": "user_metadata",
+          "method": "GET",
+          "host": ["http://mock-backend:4000"],
+          "url_pattern": "/graphql/metadata",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "query",
+              "query_path": "/etc/velonetics/graphql/queries/user_metadata.graphql",
+              "variables": {
+                "user": "{id_user}"
+              },
+              "operationName": "getUserMetadata"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

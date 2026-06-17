@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "INFO",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/graphql/limited",
+      "method": "POST",
+      "backend": [
+        {
+          "host": ["http://127.0.0.1:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "mutation",
+              "query": "mutation { ping }",
+              "variables": {}
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "max_rate": 100,
+          "client_max_rate": 1,
+          "strategy": "ip",
+          "every": "1s"
+        }
+      }
+    }
+  ]
+}

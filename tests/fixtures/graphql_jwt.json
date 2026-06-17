@@ -1,0 +1,43 @@
+{
+  "version": 3,
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "INFO",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/graphql/review/{id}",
+      "method": "POST",
+      "backend": [
+        {
+          "host": ["http://127.0.0.1:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "mutation",
+              "query": "mutation { ping }",
+              "variables": {}
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "audience": ["http://api.example.com"],
+          "roles_key": "roles",
+          "issuer": "https://velonetics.io",
+          "roles": ["role_a", "role_c"],
+          "jwk_url": "http://127.0.0.1:8081/jwk/symmetric",
+          "disable_jwk_security": true
+        }
+      }
+    }
+  ]
+}

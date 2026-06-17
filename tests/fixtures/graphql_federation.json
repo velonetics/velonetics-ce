@@ -1,0 +1,54 @@
+{
+  "version": 3,
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "INFO",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/user-data/{id_user}",
+      "backend": [
+        {
+          "group": "user",
+          "method": "GET",
+          "timeout": "3100ms",
+          "host": ["http://user-graph:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "query",
+              "query_path": "tests/fixtures/graphql/queries/user.graphql",
+              "variables": {
+                "user": "{id_user}"
+              },
+              "operationName": "getUserData"
+            }
+          }
+        },
+        {
+          "group": "user_metadata",
+          "method": "GET",
+          "timeout": "2100ms",
+          "host": ["http://metadata:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "query",
+              "query_path": "tests/fixtures/graphql/queries/user_metadata.graphql",
+              "variables": {
+                "user": "{id_user}"
+              },
+              "operationName": "getUserMetadata"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

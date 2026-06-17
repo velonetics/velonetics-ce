@@ -1,0 +1,5 @@
+query getUserMetadata($user: ID!) {
+  metadata(userId: $user) {
+    locale
+  }
+}

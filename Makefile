@@ -55,7 +55,7 @@ RPM_OPTS =--rpm-user $(USER) \
 	--before-remove builder/scripts/prerm.rpm \
   --after-remove builder/scripts/postrm.rpm
 
-all: test test-websocket test-streaming test-soap test-grpc
+all: test test-websocket test-graphql test-streaming test-soap test-grpc
 
 build: cmd/velonetics-ce/schema/schema.json
 	@echo "Building the binary..."
@@ -84,6 +84,9 @@ test-soap:
 test-grpc:
 	cd ../velonetics-grpc && go test ./...
 
+test-graphql:
+	cd ../velonetics-lura && go test ./transport/http/client/graphql/... ./proxy/... -run 'GraphQL|GetOptions|Resolve|ExtraConfig' -count=1
+
 check-fixtures: build
 	./${BIN_NAME} check -c tests/fixtures/ws_direct.json
 	./${BIN_NAME} check -c tests/fixtures/ws_multiplex.json
@@ -96,6 +99,16 @@ check-fixtures: build
 	./${BIN_NAME} check -c tests/fixtures/grpc_server_mixed.json
 	./${BIN_NAME} check -c tests/fixtures/grpc_server_jwt.json
 	./${BIN_NAME} check -c tests/fixtures/sse_stream.json
+
+check-fixtures-graphql: build
+	./${BIN_NAME} check -c tests/fixtures/graphql_mutation_post.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_query_get.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_query_path.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_proxy.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_proxy_cors.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_federation.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_jwt.json
+	./${BIN_NAME} check -c tests/fixtures/graphql_ratelimit.json
 
 check-grpc-fixtures: build
 	./${BIN_NAME} check -c tests/fixtures/grpc_client.json
@@ -121,6 +134,23 @@ ws-compose-test: cmd/velonetics-ce/schema/schema.json
 	chmod +x examples/websocket/scripts/smoke.sh
 	./examples/websocket/scripts/smoke.sh
 	cd examples/websocket && docker compose down -v
+
+graphql-compose-up:
+	cd examples/graphql && docker compose up --build -d
+
+graphql-compose-down:
+	cd examples/graphql && docker compose down
+
+graphql-compose-smoke:
+	chmod +x examples/graphql/scripts/smoke.sh
+	./examples/graphql/scripts/smoke.sh
+
+graphql-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off go mod vendor
+	cd examples/graphql && docker compose up --build -d
+	chmod +x examples/graphql/scripts/smoke.sh
+	./examples/graphql/scripts/smoke.sh
+	cd examples/graphql && docker compose down -v
 
 soap-compose-up:
 	cd examples/soap && docker compose up --build -d
