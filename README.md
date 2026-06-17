@@ -116,7 +116,6 @@ Velonetics CE supports RFC-6455 WebSocket proxying (multiplex and direct modes, 
 - [docs/websockets.md](docs/websockets.md) — configuration, envelope protocol, JWT, Docker Compose stack
 - [tests/fixtures/ws_*.json](tests/fixtures/) — sample configs
 - [velonetics-ws.json](velonetics-ws.json) — minimal direct-mode sample
-
 - 
 
 ## License
