@@ -4,7 +4,8 @@ ARG ALPINE_VERSION
 FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION}
 
 RUN apk --no-cache add tar make gcc musl-dev binutils-gold curl \
- && curl -fsSL -o /aarch64-linux-musl-cross.tgz https://musl.cc/aarch64-linux-musl-cross.tgz \
+ && curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors --connect-timeout 30 --max-time 900 \
+    -o /aarch64-linux-musl-cross.tgz https://musl.cc/aarch64-linux-musl-cross.tgz \
  && tar zxf /aarch64-linux-musl-cross.tgz -C / \
  && rm -f /aarch64-linux-musl-cross.tgz \
  && apk del curl
