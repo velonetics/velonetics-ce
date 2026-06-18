@@ -260,3 +260,39 @@ jobs:
             .
           docker push "niteesh20/velonetics:${IMAGE_TAG}"
           docker push "niteesh20/velonetics:${IMAGE_TAG#v}"
+
+  helm-chart:
+    name: Publish Helm chart to OCI
+    needs: gate
+    if: needs.gate.outputs.docker == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CHECKOUT_REF }}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package and push Helm chart
+        run: |
+          APP_VERSION=${RELEASE_TAG#v}
+          deploy/helm/scripts/verify-chart-version.sh "${APP_VERSION}"
+          helm package deploy/helm/velonetics \
+            --version "${APP_VERSION}" \
+            --app-version "${APP_VERSION}"
+          helm push "velonetics-${APP_VERSION}.tgz" "oci://ghcr.io/${{ github.repository_owner }}/charts"
+          echo "Published oci://ghcr.io/${{ github.repository_owner }}/charts/velonetics:${APP_VERSION}"

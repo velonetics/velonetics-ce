@@ -1,0 +1,39 @@
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.4
+    command:
+      - redpanda
+      - start
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+      - --mode dev-container
+      - --smp 1
+      - --memory 512M
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  mock-webhook:
+    build: ./mock-webhook
+    ports:
+      - "8081:8081"
+
+  velonetics:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      args:
+        VERSION: "2.0.0"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+    depends_on:
+      redpanda:
+        condition: service_healthy
+      mock-webhook:
+        condition: service_started
+    command: ["run", "-c", "/etc/velonetics/velonetics.json"]

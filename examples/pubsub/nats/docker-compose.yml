@@ -1,0 +1,21 @@
+services:
+  nats:
+    image: nats:2-alpine
+    ports:
+      - "4222:4222"
+
+  velonetics:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      args:
+        VERSION: "2.0.0"
+    ports:
+      - "8080:8080"
+    environment:
+      NATS_SERVER_URL: nats://nats:4222
+    volumes:
+      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+    depends_on:
+      - nats
+    command: ["run", "-c", "/etc/velonetics/velonetics.json"]

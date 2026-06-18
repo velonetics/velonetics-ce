@@ -55,7 +55,7 @@ RPM_OPTS =--rpm-user $(USER) \
 	--before-remove builder/scripts/prerm.rpm \
   --after-remove builder/scripts/postrm.rpm
 
-all: test test-websocket test-graphql test-streaming test-soap test-grpc
+all: test test-websocket test-graphql test-streaming test-soap test-grpc test-pubsub
 
 build: cmd/velonetics-ce/schema/schema.json
 	@echo "Building the binary..."
@@ -84,6 +84,9 @@ test-soap:
 test-grpc:
 	cd ../velonetics-grpc && go test ./...
 
+test-pubsub:
+	cd ../velonetics-pubsub && go test ./...
+
 test-graphql:
 	cd ../velonetics-lura && go test ./transport/http/client/graphql/... ./proxy/... -run 'GraphQL|GetOptions|Resolve|ExtraConfig' -count=1
 
@@ -99,6 +102,7 @@ check-fixtures: build
 	./${BIN_NAME} check -c tests/fixtures/grpc_server_mixed.json
 	./${BIN_NAME} check -c tests/fixtures/grpc_server_jwt.json
 	./${BIN_NAME} check -c tests/fixtures/sse_stream.json
+	./${BIN_NAME} check -c tests/fixtures/pubsub_mem.json
 
 check-fixtures-graphql: build
 	./${BIN_NAME} check -c tests/fixtures/graphql_mutation_post.json
@@ -218,6 +222,62 @@ grpc-compose-test: cmd/velonetics-ce/schema/schema.json
 	./examples/grpc/scripts/smoke-jwt.sh
 	cd examples/grpc && docker compose down -v
 
+pubsub-nats-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/nats && docker compose up --build -d
+	chmod +x examples/pubsub/nats/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/nats/scripts/smoke.sh
+	cd examples/pubsub/nats && docker compose down -v
+
+pubsub-kafka-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/kafka && docker compose up --build -d
+	chmod +x examples/pubsub/kafka/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/kafka/scripts/smoke.sh
+	cd examples/pubsub/kafka && docker compose down -v
+
+pubsub-rabbit-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/rabbit && docker compose up --build -d
+	chmod +x examples/pubsub/rabbit/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/rabbit/scripts/smoke.sh
+	cd examples/pubsub/rabbit && docker compose down -v
+
+pubsub-gcp-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/gcp && docker compose up --build -d
+	chmod +x examples/pubsub/gcp/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/gcp/scripts/smoke.sh
+	cd examples/pubsub/gcp && docker compose down -v
+
+pubsub-aws-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/aws && docker compose up --build -d
+	chmod +x examples/pubsub/aws/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/aws/scripts/smoke.sh
+	cd examples/pubsub/aws && docker compose down -v
+
+pubsub-azure-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/azure && docker compose up --build -d
+	chmod +x examples/pubsub/azure/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/azure/scripts/smoke.sh
+	cd examples/pubsub/azure && docker compose down -v
+
+pubsub-kafka-advanced-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/kafka-advanced && docker compose up --build -d
+	chmod +x examples/pubsub/kafka-advanced/scripts/smoke.sh examples/pubsub/scripts/common.sh
+	./examples/pubsub/kafka-advanced/scripts/smoke.sh
+	cd examples/pubsub/kafka-advanced && docker compose down -v
+
+pubsub-async-kafka-compose-test: cmd/velonetics-ce/schema/schema.json
+	@test -d vendor || GOWORK=off GOPROXY=direct GOPRIVATE=github.com/velonetics/* GOSUMDB=off go mod vendor
+	cd examples/pubsub/async-kafka && docker compose up --build -d
+	chmod +x examples/pubsub/async-kafka/scripts/smoke.sh
+	./examples/pubsub/async-kafka/scripts/smoke.sh
+	cd examples/pubsub/async-kafka && docker compose down -v
+
 sse-compose-up:
 	cd examples/streaming && docker compose up --build -d
 
@@ -256,6 +316,26 @@ docker: cmd/velonetics-ce/schema/schema.json
 		--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 		--build-arg VERSION=${VERSION} \
 		-t $(DOCKER_CE):${VERSION} .
+
+CHART_DIR := deploy/helm/velonetics
+
+.PHONY: sync-chart-version verify-chart-version helm-lint helm-cluster-test
+
+sync-chart-version:
+	@deploy/helm/scripts/sync-chart-version.sh $(VERSION)
+
+verify-chart-version:
+	@deploy/helm/scripts/verify-chart-version.sh $(VERSION)
+
+helm-lint:
+	helm lint $(CHART_DIR)
+	helm lint $(CHART_DIR) -f $(CHART_DIR)/ci/values-prod.yaml
+	helm lint $(CHART_DIR) -f $(CHART_DIR)/ci/values-aws-nlb.yaml
+	helm lint $(CHART_DIR) -f $(CHART_DIR)/ci/values-istio.yaml
+	@deploy/helm/scripts/verify-chart-version.sh $(VERSION)
+
+helm-cluster-test:
+	@deploy/helm/scripts/cluster-test.sh
 
 docker-builder:
 	docker build --no-cache --pull --build-arg GOLANG_VERSION=${GOLANG_VERSION} --build-arg ALPINE_VERSION=${ALPINE_VERSION} -t $(DOCKER_BUILDER):${VERSION} -f Dockerfile-builder .

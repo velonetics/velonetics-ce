@@ -1,0 +1,49 @@
+{
+  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "version": 3,
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "ERROR",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/publish",
+      "method": "POST",
+      "backend": [
+        {
+          "host": ["mem://smoke-host"],
+          "url_pattern": "/ignored",
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "backend/pubsub/publisher": {
+              "topic_url": "/events"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/subscribe",
+      "method": "GET",
+      "backend": [
+        {
+          "host": ["mem://smoke-host"],
+          "url_pattern": "/ignored",
+          "disable_host_sanitize": true,
+          "encoding": "json",
+          "extra_config": {
+            "backend/pubsub/subscriber": {
+              "subscription_url": "/events"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

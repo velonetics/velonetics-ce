@@ -1,0 +1,74 @@
+{
+  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "version": 3,
+  "name": "Velonetics Kafka Advanced pub/sub example",
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "WARNING",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/publish",
+      "method": "POST",
+      "input_headers": ["X-Event-Key"],
+      "backend": [
+        {
+          "host": ["ignore"],
+          "url_pattern": "/ignore",
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "backend/pubsub/publisher/kafka": {
+              "success_status_code": 201,
+              "writer": {
+                "topic": "events",
+                "key_meta": "X-Event-Key",
+                "cluster": {
+                  "brokers": ["redpanda:9092"],
+                  "client_id": "velonetics_publisher"
+                },
+                "producer": {
+                  "idempotent": true
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/subscribe",
+      "method": "GET",
+      "output_headers": ["X-Event-Key"],
+      "backend": [
+        {
+          "host": ["ignore"],
+          "url_pattern": "/ignore",
+          "disable_host_sanitize": true,
+          "encoding": "json",
+          "extra_config": {
+            "backend/pubsub/subscriber/kafka": {
+              "reader": {
+                "topics": ["events"],
+                "key_meta": "X-Event-Key",
+                "cluster": {
+                  "brokers": ["redpanda:9092"],
+                  "client_id": "velonetics_subscriber"
+                },
+                "group": {
+                  "id": "velonetics-advanced-smoke",
+                  "isolation_level": "read_commited"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

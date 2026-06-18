@@ -114,6 +114,9 @@ var aliases = map[string]string{
 	"github.com/velonetics/velonetics-grpc/v2/client":                "backend/grpc",
 	"github.com/velonetics/velonetics-pubsub/publisher":              "backend/pubsub/publisher",
 	"github.com/velonetics/velonetics-pubsub/subscriber":             "backend/pubsub/subscriber",
+	"github.com/velonetics/velonetics-pubsub/kafka/publisher":        "backend/pubsub/publisher/kafka",
+	"github.com/velonetics/velonetics-pubsub/kafka/subscriber":       "backend/pubsub/subscriber/kafka",
+	"github.com/velonetics/velonetics-pubsub/async":                "async/kafka",
 	"github.com/velonetics/lura/v2/transport/http/client/graphql": "backend/graphql",
 	"github.com/velonetics/velonetics-ce/v2/http":                          "backend/http",
 

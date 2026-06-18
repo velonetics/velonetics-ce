@@ -14,6 +14,8 @@ import (
 
 	veloneticsbf "github.com/velonetics/bloomfilter/v2/velonetics"
 	asyncamqp "github.com/velonetics/velonetics-amqp/v2/async"
+	asynckafka "github.com/velonetics/velonetics-pubsub/v2/async"
+	kafkapkg "github.com/velonetics/velonetics-pubsub/v2/kafka"
 	audit "github.com/velonetics/velonetics-audit"
 	cel "github.com/velonetics/velonetics-cel/v2"
 	cmd "github.com/velonetics/velonetics-cobra/v2"
@@ -37,6 +39,7 @@ import (
 	otellura "github.com/velonetics/velonetics-otel/lura"
 	otelgin "github.com/velonetics/velonetics-otel/router/gin"
 	usage "github.com/velonetics/velonetics-usage/v2"
+	soap "github.com/velonetics/velonetics-soap/v2"
 	maingrpc "github.com/velonetics/velonetics-grpc/v2"
 	grpcserver "github.com/velonetics/velonetics-grpc/v2/server"
 	"github.com/velonetics/lura/v2/async"
@@ -167,6 +170,16 @@ func (e *ExecutorBuilder) NewCmdExecutor(ctx context.Context) cmd.Executor {
 			return
 		}
 
+		if err := kafkapkg.ValidateConfig(&cfg); err != nil {
+			logger.Error("[SERVICE: Kafka]", err.Error())
+			return
+		}
+
+		if err := soap.ValidateConfig(&cfg); err != nil {
+			logger.Error("[SERVICE: SOAP]", err.Error())
+			return
+		}
+
 		logger.Info(fmt.Sprintf("Starting Velonetics v%s", core.VeloneticsVersion))
 		startReporter(ctx, logger, cfg)
 
@@ -262,12 +275,14 @@ func (e *ExecutorBuilder) NewCmdExecutor(ctx context.Context) cmd.Executor {
 
 		g.Go(func() error {
 			logger.Info("[SERVICE: Gin] Building the router")
-			routerFactory.NewWithContext(ctx).Run(cfg)
+			routerFactory.NewWithContext(gctx).Run(cfg)
 			closeGroupCtx()
 			return nil
 		})
 
-		g.Wait()
+		if err := g.Wait(); err != nil {
+			logger.Error("[SERVICE: Async]", err.Error())
+		}
 	}
 }
 
@@ -306,7 +321,7 @@ func (e *ExecutorBuilder) checkCollaborators() {
 		e.RunServerFactory = new(DefaultRunServerFactory)
 	}
 	if e.AgentStarterFactory == nil {
-		e.AgentStarterFactory = async.AgentStarter([]async.Factory{asyncamqp.StartAgent})
+		e.AgentStarterFactory = async.AgentStarter([]async.Factory{asyncamqp.StartAgent, asynckafka.StartAgent})
 	}
 }
 
