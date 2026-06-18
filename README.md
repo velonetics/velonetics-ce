@@ -89,6 +89,18 @@ Run it:
 docker run -it -p "8080:8080" -v $(pwd)/velonetics.json:/etc/velonetics/velonetics.json niteesh20/velonetics:2.0.0 run -c /etc/velonetics/velonetics.json
 ```
 
+## Kubernetes / Helm
+
+Deploy to Kubernetes with the official Helm chart from the [velonetics-ce](https://github.com/velonetics/velonetics-ce) repository:
+
+```bash
+git clone https://github.com/velonetics/velonetics-ce.git
+cd velonetics-ce
+helm install my-gateway ./deploy/helm/velonetics
+```
+
+See [deploy/helm/velonetics/README.md](deploy/helm/velonetics/README.md) for configuration modes (ConfigMap vs immutable image), Ingress, HPA, PDB, and Prometheus integration.
+
 ## Build
 
 See the required Go version in the `Makefile`, and then:

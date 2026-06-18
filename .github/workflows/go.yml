@@ -32,6 +32,11 @@ jobs:
           git clone --depth 1 --branch v2.0.1 https://github.com/velonetics/velonetics-grpc.git /tmp/velonetics-grpc
           cd /tmp/velonetics-grpc && go test -count=1 ./...
 
+      - name: Lura GraphQL module tests
+        run: |
+          git clone --depth 1 --branch v2.0.4 https://github.com/velonetics/lura.git /tmp/velonetics-lura
+          cd /tmp/velonetics-lura && go test -count=1 ./transport/http/client/graphql/... ./proxy/... -run 'GraphQL|GetOptions|Resolve|ExtraConfig'
+
       - name: Fetch JSON schema
         run: |
           curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
@@ -55,9 +60,84 @@ jobs:
           ./velonetics check -c tests/fixtures/grpc_server.json
           ./velonetics check -c tests/fixtures/grpc_server_mixed.json
           ./velonetics check -c tests/fixtures/grpc_server_jwt.json
+          ./velonetics check -c tests/fixtures/graphql_mutation_post.json
+          ./velonetics check -c tests/fixtures/graphql_query_get.json
+          ./velonetics check -c tests/fixtures/graphql_query_path.json
+          ./velonetics check -c tests/fixtures/graphql_proxy.json
+          ./velonetics check -c tests/fixtures/graphql_proxy_cors.json
+          ./velonetics check -c tests/fixtures/graphql_federation.json
+          ./velonetics check -c tests/fixtures/graphql_jwt.json
+          ./velonetics check -c tests/fixtures/graphql_ratelimit.json
+
+      - name: GraphQL integration test
+        run: cd tests && go test -count=1 -run TestGraphQLIntegration -timeout 2m
 
       - name: WebSocket integration test
         run: cd tests && go test -count=1 -run TestWebSocket -timeout 2m
 
       - name: Unit tests
         run: go test $(go list ./... | grep -vE '/tests$|/cmd/velonetics-integration')
+
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.4
+
+      - name: Lint Helm chart
+        run: helm lint deploy/helm/velonetics
+
+      - name: Verify chart version alignment
+        run: deploy/helm/scripts/verify-chart-version.sh
+
+      - name: Template Helm chart (default)
+        run: helm template test deploy/helm/velonetics > /dev/null
+
+      - name: Template Helm chart (optional resources)
+        run: |
+          helm template test deploy/helm/velonetics \
+            --set ingress.enabled=true \
+            --set autoscaling.enabled=true \
+            --set podDisruptionBudget.enabled=true \
+            --set serviceMonitor.enabled=true > /dev/null
+
+      - name: Template Helm chart (image config mode)
+        run: helm template test deploy/helm/velonetics --set config.mode=image > /dev/null
+
+      - name: Template Helm chart (NLB and sidecar injection)
+        run: |
+          helm template test deploy/helm/velonetics \
+            --set service.nlb.enabled=true \
+            --set service.nlb.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=nlb \
+            --set sidecarInjection.enabled=true \
+            --set sidecarInjection.istio.enabled=true > /dev/null
+
+      - name: Lint Helm chart with example values
+        run: |
+          helm lint deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-prod.yaml
+          helm lint deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-aws-nlb.yaml
+          helm lint deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-istio.yaml
+
+      - name: Template Helm chart (all optional resources)
+        run: |
+          helm template test deploy/helm/velonetics \
+            --set ingress.enabled=true \
+            --set certificate.enabled=true \
+            --set httpRoute.enabled=true \
+            --set 'httpRoute.parentRefs[0].name'=main-gateway \
+            --set networkPolicy.enabled=true \
+            --set rbac.create=true \
+            --set podMonitor.enabled=true \
+            --set prometheusRule.enabled=true \
+            --set 'prometheusRule.rules[0].alert'=VeloneticsDown \
+            --set 'prometheusRule.rules[0].expr'=up==0 \
+            --set keda.enabled=true \
+            --set 'keda.triggers[0].type'=cpu \
+            --set 'keda.triggers[0].metadata.type'=Utilization \
+            --set 'keda.triggers[0].metadata.value'=80 \
+            --set config.mode=secret \
+            --set probes.startup.enabled=true > /dev/null

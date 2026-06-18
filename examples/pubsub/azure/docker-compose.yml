@@ -1,0 +1,51 @@
+services:
+  sqledge:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Velonetics_PubSub_2025!"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Velonetics_PubSub_2025!" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  servicebus-emulator:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    ports:
+      - "5672:5672"
+      - "5300:5300"
+    volumes:
+      - ./config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
+    environment:
+      SQL_SERVER: sqledge
+      MSSQL_SA_PASSWORD: "Velonetics_PubSub_2025!"
+      ACCEPT_EULA: "Y"
+      EMULATOR_HTTP_PORT: 5300
+    depends_on:
+      sqledge:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5300/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  velonetics:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      args:
+        VERSION: "2.0.0"
+    ports:
+      - "8080:8080"
+    environment:
+      SERVICEBUS_CONNECTION_STRING: "Endpoint=sb://servicebus-emulator;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
+    volumes:
+      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+    depends_on:
+      servicebus-emulator:
+        condition: service_healthy
+    command: ["run", "-c", "/etc/velonetics/velonetics.json"]

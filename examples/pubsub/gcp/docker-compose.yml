@@ -1,0 +1,43 @@
+services:
+  pubsub:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:emulators
+    command: gcloud beta emulators pubsub start --host-port=0.0.0.0:8085 --project=velonetics-smoke
+    ports:
+      - "8085:8085"
+
+  pubsub-init:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
+    depends_on:
+      - pubsub
+    environment:
+      PUBSUB_EMULATOR_HOST: pubsub:8085
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        set -euo pipefail
+        for i in $(seq 1 30); do
+          if gcloud pubsub topics create events --project=velonetics-smoke 2>/dev/null; then
+            break
+          fi
+          sleep 2
+        done
+        gcloud pubsub subscriptions create events-sub --topic=events --project=velonetics-smoke
+        echo "GCP Pub/Sub emulator initialized"
+
+  velonetics:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      args:
+        VERSION: "2.0.0"
+    ports:
+      - "8080:8080"
+    environment:
+      PUBSUB_EMULATOR_HOST: pubsub:8085
+    volumes:
+      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+    depends_on:
+      pubsub-init:
+        condition: service_completed_successfully
+    command: ["run", "-c", "/etc/velonetics/velonetics.json"]

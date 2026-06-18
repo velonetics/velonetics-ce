@@ -745,6 +745,152 @@
             "extra_config":{
                 "validation/json-schema": {"type": "number"}
             }
+        },
+        {
+            "endpoint": "/graphql_adapter/review/{id_show}",
+            "method": "POST",
+            "backend": [
+                {
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/?dump_body=1",
+                    "extra_config": {
+                        "backend/graphql": {
+                            "type": "mutation",
+                            "query": "mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) { createReview(episode: $ep, review: $review) { stars commentary } }",
+                            "variables": {
+                                "ep": "JEDI",
+                                "review": {
+                                    "stars": 3,
+                                    "commentary": "meh"
+                                }
+                            },
+                            "operationName": "CreateReviewForEpisode"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/graphql_adapter/hero/{episode}",
+            "method": "GET",
+            "backend": [
+                {
+                    "method": "GET",
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/?dump_body=1",
+                    "extra_config": {
+                        "backend/graphql": {
+                            "type": "query",
+                            "query": "query Hero($episode: Episode!) { hero(episode: $episode) { name } }",
+                            "variables": {
+                                "episode": "{episode}"
+                            },
+                            "operationName": "Hero"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/graphql_proxy",
+            "method": "POST",
+            "input_query_strings": ["query", "operationName", "variables"],
+            "backend": [
+                {
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/?dump_body=1"
+                }
+            ]
+        },
+        {
+            "endpoint": "/graphql_federation/{id_user}",
+            "backend": [
+                {
+                    "group": "user",
+                    "method": "GET",
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/user",
+                    "extra_config": {
+                        "backend/graphql": {
+                            "type": "query",
+                            "query": "query getUserData($user: ID!) { user(id: $user) { name } }",
+                            "variables": {
+                                "user": "{id_user}"
+                            },
+                            "operationName": "getUserData"
+                        }
+                    }
+                },
+                {
+                    "group": "user_metadata",
+                    "method": "GET",
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/metadata",
+                    "extra_config": {
+                        "backend/graphql": {
+                            "type": "query",
+                            "query": "query getUserMetadata($user: ID!) { metadata(userId: $user) { locale } }",
+                            "variables": {
+                                "user": "{id_user}"
+                            },
+                            "operationName": "getUserMetadata"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/graphql_private/review/{id}",
+            "method": "POST",
+            "backend": [
+                {
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/?dump_body=1",
+                    "extra_config": {
+                        "backend/graphql": {
+                            "type": "mutation",
+                            "query": "mutation { ping }",
+                            "variables": {}
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "audience": ["http://api.example.com"],
+                    "roles_key": "roles",
+                    "issuer": "https://velonetics.io",
+                    "roles": ["role_a", "role_c"],
+                    "jwk_url": "http://127.0.0.1:8081/jwk/symmetric",
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
+            "endpoint": "/graphql_ratelimit",
+            "method": "POST",
+            "backend": [
+                {
+                    "host": ["http://127.0.0.1:8081"],
+                    "url_pattern": "/param_forwarding/?dump_body=1",
+                    "extra_config": {
+                        "backend/graphql": {
+                            "type": "mutation",
+                            "query": "mutation { ping }",
+                            "variables": {}
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "qos/ratelimit/router": {
+                    "max_rate": 100,
+                    "client_max_rate": 1,
+                    "strategy": "ip",
+                    "every": "1s"
+                }
+            }
         }
     ]
 }

@@ -1,0 +1,37 @@
+{
+  "version": 3,
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "INFO",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/hero/{episode}",
+      "method": "GET",
+      "backend": [
+        {
+          "method": "GET",
+          "host": ["http://127.0.0.1:4000"],
+          "url_pattern": "/graphql",
+          "extra_config": {
+            "backend/graphql": {
+              "type": "query",
+              "query_path": "tests/fixtures/graphql/queries/hero.graphql",
+              "variables": {
+                "episode": "{episode}",
+                "withFriends": false
+              },
+              "operationName": "Hero"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

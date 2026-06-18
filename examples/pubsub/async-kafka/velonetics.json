@@ -1,0 +1,50 @@
+{
+  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "version": 3,
+  "name": "Velonetics async/kafka example",
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "WARNING",
+      "stdout": true
+    },
+    "telemetry/usage": {
+      "enabled": false
+    }
+  },
+  "async_agent": [
+    {
+      "name": "events-consumer",
+      "consumer": {
+        "topic": "events",
+        "workers": 2,
+        "timeout": "2s"
+      },
+      "backend": [
+        {
+          "host": ["http://mock-webhook:8081"],
+          "url_pattern": "/ingest",
+          "method": "POST"
+        }
+      ],
+      "connection": {
+        "max_retries": 3,
+        "backoff_strategy": "linear",
+        "health_interval": "10s"
+      },
+      "extra_config": {
+        "async/kafka": {
+          "cluster": {
+            "brokers": ["redpanda:9092"],
+            "client_id": "velonetics_async_agent"
+          },
+          "group": {
+            "group_id": "velonetics-async-smoke",
+            "isolation_level": "read_commited"
+          },
+          "key_meta": "X-Event-Key"
+        }
+      }
+    }
+  ]
+}

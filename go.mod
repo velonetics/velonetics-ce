@@ -9,8 +9,8 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 	github.com/spf13/cobra v1.8.1
 	github.com/velonetics/bloomfilter/v2 v2.0.0
-	github.com/velonetics/lura/v2 v2.0.3
-	github.com/velonetics/velonetics-amqp/v2 v2.0.0
+	github.com/velonetics/lura/v2 v2.0.7
+	github.com/velonetics/velonetics-amqp/v2 v2.0.3
 	github.com/velonetics/velonetics-audit v1.0.1
 	github.com/velonetics/velonetics-botdetector/v2 v2.0.0
 	github.com/velonetics/velonetics-cel/v2 v2.0.0
@@ -20,7 +20,7 @@ require (
 	github.com/velonetics/velonetics-flexibleconfig/v2 v2.0.0
 	github.com/velonetics/velonetics-gelf/v2 v2.0.0
 	github.com/velonetics/velonetics-gologging/v2 v2.0.0
-	github.com/velonetics/velonetics-grpc/v2 v2.0.1
+	github.com/velonetics/velonetics-grpc/v2 v2.0.7
 	github.com/velonetics/velonetics-httpcache/v2 v2.0.0
 	github.com/velonetics/velonetics-httpsecure/v2 v2.0.0
 	github.com/velonetics/velonetics-influx/v2 v2.0.0
@@ -35,12 +35,12 @@ require (
 	github.com/velonetics/velonetics-oauth2-clientcredentials/v2 v2.0.0
 	github.com/velonetics/velonetics-opencensus/v2 v2.0.0
 	github.com/velonetics/velonetics-otel v1.0.0
-	github.com/velonetics/velonetics-pubsub/v2 v2.0.0
+	github.com/velonetics/velonetics-pubsub/v2 v2.0.5
 	github.com/velonetics/velonetics-ratelimit/v3 v3.0.0
 	github.com/velonetics/velonetics-rss/v2 v2.0.0
-	github.com/velonetics/velonetics-soap/v2 v2.1.0
+	github.com/velonetics/velonetics-soap/v2 v2.2.2
 	github.com/velonetics/velonetics-usage/v2 v2.0.0
-	github.com/velonetics/velonetics-websocket/v2 v2.0.1
+	github.com/velonetics/velonetics-websocket/v2 v2.0.7
 	github.com/velonetics/velonetics-xml/v2 v2.0.0
 	golang.org/x/sync v0.20.0
 )
@@ -221,6 +221,7 @@ require (
 	github.com/rs/cors/wrapper/gin v0.0.0-20240830163046-1084d89a1692 // indirect
 	github.com/russellhaering/goxmldsig v1.5.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
+	github.com/segmentio/kafka-go v0.4.51 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sony/gobreaker/v2 v2.4.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
