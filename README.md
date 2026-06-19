@@ -117,9 +117,7 @@ make build_on_docker
 
 ## Configuration
 
-Pucora uses a JSON configuration format compatible with Pucora configs. Configuration files are named `pucora.json` and placed in `/etc/pucora/`.
-
-Legacy Pucora namespace keys in `extra_config` are still accepted for backward compatibility.
+Pucora uses a JSON configuration format. Configuration files are named `pucora.json` and placed in `/etc/pucora/`.
 
 ### WebSockets
 

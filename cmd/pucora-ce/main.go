@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	pucora "github.com/pucora/pucora-ce/v2"
@@ -136,18 +135,5 @@ var aliases = map[string]string{
 func registerAliases() {
 	for key, alias := range aliases {
 		config.ExtraConfigAlias[alias] = key
-	}
-	// Legacy github.com/velonetics and github.com/pucora/velonetics-* extra_config keys remain accepted.
-	for key := range aliases {
-		legacyKey := strings.Replace(key, "github.com/pucora/", "github.com/velonetics/", 1)
-		legacyKey = strings.Replace(legacyKey, "github_com/pucora/", "github_com/velonetics/", 1)
-		if legacyKey != key {
-			config.ExtraConfigAlias[legacyKey] = key
-		}
-		pucoraVeloneticsKey := strings.Replace(key, "github.com/pucora/pucora-", "github.com/pucora/velonetics-", 1)
-		pucoraVeloneticsKey = strings.Replace(pucoraVeloneticsKey, "github_com/pucora/pucora-", "github_com/pucora/velonetics-", 1)
-		if pucoraVeloneticsKey != key {
-			config.ExtraConfigAlias[pucoraVeloneticsKey] = key
-		}
 	}
 }
