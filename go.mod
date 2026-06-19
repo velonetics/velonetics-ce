@@ -9,13 +9,17 @@ require (
 	github.com/pucora/bloomfilter/v2 v2.0.1
 	github.com/pucora/lura/v2 v2.0.9
 	github.com/pucora/pucora-amqp/v2 v2.0.4
+	github.com/pucora/pucora-apikeys/v2 v2.0.0
 	github.com/pucora/pucora-audit v1.0.2
+	github.com/pucora/pucora-aws-sigv4/v2 v2.0.0
+	github.com/pucora/pucora-basicauth/v2 v2.0.0
 	github.com/pucora/pucora-botdetector/v2 v2.0.1
 	github.com/pucora/pucora-cel/v2 v2.0.1
 	github.com/pucora/pucora-circuitbreaker/v3 v3.0.1
 	github.com/pucora/pucora-cobra/v2 v2.0.1
 	github.com/pucora/pucora-cors/v2 v2.0.1
 	github.com/pucora/pucora-flexibleconfig/v2 v2.0.1
+	github.com/pucora/pucora-gcp-auth/v2 v2.0.0
 	github.com/pucora/pucora-gelf/v2 v2.0.1
 	github.com/pucora/pucora-gologging/v2 v2.0.1
 	github.com/pucora/pucora-grpc/v2 v2.0.8
@@ -30,11 +34,13 @@ require (
 	github.com/pucora/pucora-lua/v2 v2.0.1
 	github.com/pucora/pucora-martian/v2 v2.0.1
 	github.com/pucora/pucora-metrics/v2 v2.0.1
+	github.com/pucora/pucora-ntlm/v2 v2.0.0-00010101000000-000000000000
 	github.com/pucora/pucora-oauth2-clientcredentials/v2 v2.0.1
 	github.com/pucora/pucora-opencensus/v2 v2.0.1
 	github.com/pucora/pucora-otel v1.0.1
 	github.com/pucora/pucora-pubsub/v2 v2.0.6
 	github.com/pucora/pucora-ratelimit/v3 v3.0.1
+	github.com/pucora/pucora-revoker/v2 v2.0.0
 	github.com/pucora/pucora-rss/v2 v2.0.1
 	github.com/pucora/pucora-soap/v2 v2.2.3
 	github.com/pucora/pucora-usage/v2 v2.0.1
@@ -74,6 +80,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus v1.10.0 // indirect
 	github.com/Azure/go-amqp v1.5.0 // indirect
+	github.com/Azure/go-ntlmssp v0.1.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.6.0 // indirect
 	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/DataDog/opencensus-go-exporter-datadog v0.0.0-20220622145613-731d59e8b567 // indirect
@@ -297,4 +304,13 @@ require (
 	gopkg.in/DataDog/dd-trace-go.v1 v1.62.0 // indirect
 	gopkg.in/Graylog2/go-gelf.v2 v2.0.0-20191017102106-1550ee647df0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
+
+replace (
+	github.com/pucora/pucora-apikeys/v2 => ../pucora-apikeys
+	github.com/pucora/pucora-aws-sigv4/v2 => ../pucora-aws-sigv4
+	github.com/pucora/pucora-basicauth/v2 => ../pucora-basicauth
+	github.com/pucora/pucora-gcp-auth/v2 => ../pucora-gcp-auth
+	github.com/pucora/pucora-ntlm/v2 => ../pucora-ntlm
+	github.com/pucora/pucora-revoker/v2 => ../pucora-revoker
 )

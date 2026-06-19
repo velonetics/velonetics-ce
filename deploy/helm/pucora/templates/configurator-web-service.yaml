@@ -1,0 +1,23 @@
+{{- if .Values.configurator.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pucora.configuratorWebName" . }}
+  labels:
+    {{- include "pucora.labels" . | nindent 4 }}
+    app.kubernetes.io/component: configurator-web
+  {{- with .Values.configurator.web.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.configurator.web.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "pucora.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: configurator-web
+{{- end }}

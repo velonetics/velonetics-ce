@@ -68,12 +68,28 @@ jobs:
           ./pucora check -c tests/fixtures/graphql_federation.json
           ./pucora check -c tests/fixtures/graphql_jwt.json
           ./pucora check -c tests/fixtures/graphql_ratelimit.json
+          ./pucora check -c tests/fixtures/api_keys.json
+          ./pucora check -c tests/fixtures/basic_auth.json
+          ./pucora check -c tests/fixtures/backend_gcp.json
+          ./pucora check -c tests/fixtures/backend_sigv4.json
+          ./pucora check -c tests/fixtures/backend_ntlm.json
+          ./pucora check -c tests/fixtures/revoke_server.json
+          ./pucora check -c tests/fixtures/multi_idp.json
+
+      - name: Authorization module tests
+        run: make test-auth
+
+      - name: Build jwk-aggregator plugin
+        run: make jwk-aggregator-plugin
 
       - name: GraphQL integration test
         run: cd tests && go test -count=1 -run TestGraphQLIntegration -timeout 2m
 
       - name: WebSocket integration test
         run: cd tests && go test -count=1 -run TestWebSocket -timeout 2m
+
+      - name: Authorization integration test
+        run: cd tests && go test -count=1 -run 'TestAPIKeysIntegration|TestBasicAuthIntegration' -timeout 2m
 
       - name: Unit tests
         run: go test $(go list ./... | grep -vE '/tests$|/cmd/pucora-integration')

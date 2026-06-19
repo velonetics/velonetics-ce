@@ -138,7 +138,7 @@ jobs:
              make -e build && make -e tgz;
              make clean;
              export CC= GOARCH=amd64 ARCH=amd64 OS_TAG=_generic-linux EXTRA_LDFLAGS=;
-             make -e build && make -e tgz;"
+             make -e build && make -e jwk-aggregator-plugin && make -e tgz;"
       - name: Build DEB package (AMD64)
         run: |
           docker run --rm \

@@ -85,7 +85,7 @@ Secret name for pucora.json
 Whether configuration is mounted from a ConfigMap.
 */}}
 {{- define "pucora.useConfigMap" -}}
-{{- if and (eq .Values.config.mode "configmap") (or .Values.config.existingConfigMap .Values.config.pucoraJson) }}
+{{- if and (eq .Values.config.mode "configmap") (or .Values.config.existingConfigMap .Values.config.pucoraJson) (ne (include "pucora.useConfiguratorConfig" .) "true") }}
 true
 {{- else }}
 false
@@ -96,7 +96,7 @@ false
 Whether configuration is mounted from a Secret.
 */}}
 {{- define "pucora.useConfigSecret" -}}
-{{- if and (eq .Values.config.mode "secret") (or .Values.config.existingSecret .Values.config.pucoraJson) }}
+{{- if and (eq .Values.config.mode "secret") (or .Values.config.existingSecret .Values.config.pucoraJson) (ne (include "pucora.useConfiguratorConfig" .) "true") }}
 true
 {{- else }}
 false
@@ -211,5 +211,46 @@ Certificate secret name for Ingress TLS.
 {{- .Values.certificate.secretName }}
 {{- else }}
 {{- printf "%s-tls" (include "pucora.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Configurator component names
+*/}}
+{{- define "pucora.configuratorApiName" -}}
+{{- printf "%s-configurator-api" (include "pucora.fullname" .) }}
+{{- end }}
+
+{{- define "pucora.configuratorWebName" -}}
+{{- printf "%s-configurator-web" (include "pucora.fullname" .) }}
+{{- end }}
+
+{{- define "pucora.configuratorApiSecretName" -}}
+{{- if .Values.configurator.api.auth.existingSecret }}
+{{- .Values.configurator.api.auth.existingSecret }}
+{{- else }}
+{{- printf "%s-configurator-api" (include "pucora.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{- define "pucora.configuratorApiUrl" -}}
+{{- printf "http://%s:%v" (include "pucora.configuratorApiName" .) .Values.configurator.api.service.port }}
+{{- end }}
+
+{{/*
+Whether gateway config is loaded from the configurator API.
+*/}}
+{{- define "pucora.useConfiguratorConfig" -}}
+{{- if and .Values.configurator.enabled (eq .Values.config.mode "configurator") -}}true{{- else -}}false{{- end -}}
+{{- end }}
+
+{{/*
+Configurator API auth is configured.
+*/}}
+{{- define "pucora.configuratorApiAuthEnabled" -}}
+{{- if or .Values.configurator.api.auth.apiKey .Values.configurator.api.auth.existingSecret }}
+true
+{{- else }}
+false
 {{- end }}
 {{- end }}

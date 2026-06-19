@@ -1,0 +1,58 @@
+{{- if .Values.configurator.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pucora.configuratorWebName" . }}
+  labels:
+    {{- include "pucora.labels" . | nindent 4 }}
+    app.kubernetes.io/component: configurator-web
+spec:
+  replicas: {{ .Values.configurator.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pucora.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: configurator-web
+  template:
+    metadata:
+      labels:
+        {{- include "pucora.labels" . | nindent 8 }}
+        app.kubernetes.io/component: configurator-web
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: configurator-web
+          image: "{{ .Values.configurator.web.image.repository }}:{{ .Values.configurator.web.image.tag }}"
+          imagePullPolicy: {{ .Values.configurator.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          {{- with .Values.configurator.web.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+              readOnly: true
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ include "pucora.configuratorWebName" . }}
+{{- end }}

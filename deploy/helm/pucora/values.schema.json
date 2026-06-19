@@ -12,7 +12,7 @@
       "properties": {
         "mode": {
           "type": "string",
-          "enum": ["configmap", "secret", "image"]
+          "enum": ["configmap", "secret", "image", "configurator"]
         }
       }
     },
@@ -73,6 +73,12 @@
       "properties": {
         "enabled": { "type": "boolean" },
         "configCheck": { "type": "boolean" }
+      }
+    },
+    "configurator": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" }
       }
     }
   }

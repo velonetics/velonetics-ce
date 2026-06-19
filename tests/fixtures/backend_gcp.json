@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "endpoints": [
+    {
+      "endpoint": "/cloud-run",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "host": ["https://example.run.app"],
+          "extra_config": {
+            "auth/gcp": {
+              "audience": "https://example.run.app"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

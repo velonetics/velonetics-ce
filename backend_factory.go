@@ -12,6 +12,9 @@ import (
 	lua "github.com/pucora/pucora-lua/v2/proxy"
 	martian "github.com/pucora/pucora-martian/v2"
 	metrics "github.com/pucora/pucora-metrics/v2/gin"
+	awssigv4 "github.com/pucora/pucora-aws-sigv4/v2"
+	gcpauth "github.com/pucora/pucora-gcp-auth/v2"
+	ntlm "github.com/pucora/pucora-ntlm/v2"
 	oauth2client "github.com/pucora/pucora-oauth2-clientcredentials/v2"
 	opencensus "github.com/pucora/pucora-opencensus/v2"
 	otellura "github.com/pucora/pucora-otel/lura"
@@ -45,6 +48,7 @@ func NewBackendFactory(logger logging.Logger, metricCollector *metrics.Metrics) 
 func newRequestExecutorFactory(ctx context.Context, logger logging.Logger) func(*config.Backend) client.HTTPRequestExecutor {
 	requestExecutorFactory := func(cfg *config.Backend) client.HTTPRequestExecutor {
 		clientFactory := client.NewHTTPClient
+		clientFactory = ntlm.NewHTTPClient(cfg, clientFactory)
 		if _, ok := cfg.ExtraConfig[oauth2client.Namespace]; ok {
 			clientFactory = oauth2client.NewHTTPClient(cfg)
 		}
@@ -52,7 +56,10 @@ func newRequestExecutorFactory(ctx context.Context, logger logging.Logger) func(
 		clientFactory = httpcache.NewHTTPClient(cfg, clientFactory)
 		clientFactory = otellura.InstrumentedHTTPClientFactory(clientFactory, cfg)
 		// TODO: check what happens if we have both, opencensus and otel enabled ?
-		return opencensus.HTTPRequestExecutorFromConfig(clientFactory, cfg)
+		exec := opencensus.HTTPRequestExecutorFromConfig(clientFactory, cfg)
+		exec = gcpauth.WrapRequestExecutor(cfg, exec)
+		exec = awssigv4.WrapRequestExecutor(cfg, exec)
+		return exec
 	}
 	return httprequestexecutor.HTTPRequestExecutorWithContext(ctx, logger, requestExecutorFactory)
 }

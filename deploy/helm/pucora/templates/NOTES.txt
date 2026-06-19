@@ -49,8 +49,27 @@ Sidecar injection is enabled.
 Configuration mode: {{ .Values.config.mode }}
 {{- if eq .Values.config.mode "configmap" }}
    Update config.pucoraJson in values.yaml or use --set-file config.pucoraJson=./pucora.json
+{{- else if eq .Values.config.mode "configurator" }}
+   Gateway loads config from Configurator API (config.configurator.configName={{ .Values.config.configurator.configName }}).
+   Restart gateway pods after publishing changes in the UI.
+{{- else if eq .Values.config.mode "secret" }}
+   Update config.pucoraJson or config.existingSecret for Secret-backed configuration.
 {{- else }}
    Configuration is expected to be baked into the container image.
+{{- end }}
+{{- if .Values.configurator.enabled }}
+
+Configurator UI:
+{{- if .Values.configurator.ingress.enabled }}
+{{- range $host := .Values.configurator.ingress.hosts }}
+  http{{ if $.Values.configurator.ingress.tls }}s{{ end }}://{{ $host.host }}
+{{- end }}
+{{- else }}
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "pucora.configuratorWebName" . }} 3000:{{ .Values.configurator.web.service.port }}
+  echo "Visit http://127.0.0.1:3000"
+{{- end }}
+
+  API: {{ include "pucora.configuratorApiName" . }}:{{ .Values.configurator.api.service.port }}
 {{- end }}
 
 Source repository: https://github.com/pucora/pucora-ce

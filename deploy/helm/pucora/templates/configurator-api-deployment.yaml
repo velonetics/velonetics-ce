@@ -1,0 +1,76 @@
+{{- if .Values.configurator.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pucora.configuratorApiName" . }}
+  labels:
+    {{- include "pucora.labels" . | nindent 4 }}
+    app.kubernetes.io/component: configurator-api
+spec:
+  replicas: {{ .Values.configurator.api.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pucora.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: configurator-api
+  template:
+    metadata:
+      labels:
+        {{- include "pucora.labels" . | nindent 8 }}
+        app.kubernetes.io/component: configurator-api
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: configurator-api
+          image: "{{ .Values.configurator.api.image.repository }}:{{ .Values.configurator.api.image.tag }}"
+          imagePullPolicy: {{ .Values.configurator.api.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.configurator.api.service.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.configurator.api.service.port | quote }}
+            {{- range $key, $value := .Values.configurator.api.env }}
+            {{- if $value }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if eq (include "pucora.configuratorApiAuthEnabled" .) "true" }}
+            - name: CONFIG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "pucora.configuratorApiSecretName" . }}
+                  key: {{ .Values.configurator.api.auth.secretKey }}
+            {{- end }}
+            {{- with .Values.configurator.api.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /api/configs
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /api/configs
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        {{- if .Values.configurator.persistence.enabled }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "pucora.configuratorApiName" . }}
+        {{- else }}
+        - name: data
+          emptyDir: {}
+        {{- end }}
+{{- end }}

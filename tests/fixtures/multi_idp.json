@@ -1,0 +1,34 @@
+{
+  "version": 3,
+  "plugin": {
+    "pattern": ".so",
+    "folder": "./plugins/"
+  },
+  "extra_config": {
+    "plugin/http-server": {
+      "name": ["jwk-aggregator"],
+      "jwk-aggregator": {
+        "port": 9876,
+        "cache": true,
+        "origins": [
+          "https://provider1.example.com/.well-known/jwks.json",
+          "https://provider2.example.com/.well-known/jwks.json"
+        ]
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/protected",
+      "backend": [{ "url_pattern": "/", "host": ["http://localhost:8080"] }],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://127.0.0.1:9876",
+          "disable_jwk_security": true,
+          "cache": true
+        }
+      }
+    }
+  ]
+}

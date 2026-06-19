@@ -1,4 +1,4 @@
-.PHONY: all build test
+.PHONY: all build test jwk-aggregator-plugin test-auth check-fixtures-auth
 
 # This Makefile is a simple example that demonstrates usual steps to build a binary that can be run in the same
 # architecture that was compiled in. The "ldflags" in the build assure that any needed dependency is included in the
@@ -120,6 +120,28 @@ check-fixtures-graphql: build
 	./${BIN_NAME} check -c tests/fixtures/graphql_federation.json
 	./${BIN_NAME} check -c tests/fixtures/graphql_jwt.json
 	./${BIN_NAME} check -c tests/fixtures/graphql_ratelimit.json
+
+check-fixtures-auth: build
+	./${BIN_NAME} check -c tests/fixtures/api_keys.json
+	./${BIN_NAME} check -c tests/fixtures/basic_auth.json
+	./${BIN_NAME} check -c tests/fixtures/backend_gcp.json
+	./${BIN_NAME} check -c tests/fixtures/backend_sigv4.json
+	./${BIN_NAME} check -c tests/fixtures/backend_ntlm.json
+	./${BIN_NAME} check -c tests/fixtures/revoke_server.json
+	./${BIN_NAME} check -c tests/fixtures/multi_idp.json
+
+test-auth:
+	cd ../pucora-apikeys && go test ./...
+	cd ../pucora-basicauth && go test ./...
+	cd ../pucora-gcp-auth && go test ./...
+	cd ../pucora-aws-sigv4 && go test ./...
+	cd ../pucora-ntlm && go test ./...
+	cd ../pucora-revoker && go test ./...
+	cd ../pucora-jwk-aggregator && go test ./...
+
+jwk-aggregator-plugin:
+	@mkdir -p plugins
+	cd ../pucora-jwk-aggregator/plugin && go build -buildmode=plugin -o ../../pucora-ce/plugins/jwk-aggregator.so .
 
 check-grpc-fixtures: build
 	./${BIN_NAME} check -c tests/fixtures/grpc_client.json

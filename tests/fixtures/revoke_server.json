@@ -1,0 +1,15 @@
+{
+  "version": 3,
+  "port": 8081,
+  "extra_config": {
+    "auth/revoker": {
+      "N": 1000000,
+      "P": 1e-7,
+      "TTL": 3600,
+      "hash_name": "optimal",
+      "port": 1234,
+      "token_keys": ["jti"],
+      "revoke_server_api_key": "639ee23f-f4c5-40c4-855c-912bf01fae87"
+    }
+  }
+}

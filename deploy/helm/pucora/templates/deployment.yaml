@@ -1,3 +1,6 @@
+{{- if and (eq .Values.config.mode "configurator") (not .Values.configurator.enabled) }}
+{{- fail "config.mode \"configurator\" requires configurator.enabled=true" }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -59,9 +62,41 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.initContainers }}
+      {{- if or (eq (include "pucora.useConfiguratorConfig" .) "true") .Values.initContainers }}
       initContainers:
+        {{- if eq (include "pucora.useConfiguratorConfig" .) "true" }}
+        - name: fetch-gateway-config
+          image: "{{ .Values.configurator.gateway.initImage.repository }}:{{ .Values.configurator.gateway.initImage.tag }}"
+          imagePullPolicy: {{ .Values.configurator.gateway.initImage.pullPolicy }}
+          command:
+            - sh
+            - -ec
+            - |
+              url="{{ include "pucora.configuratorApiUrl" . }}/api/config/{{ .Values.config.configurator.configName }}/pucora.json"
+              for i in $(seq 1 {{ .Values.configurator.gateway.fetchRetries }}); do
+                {{- if or .Values.config.configurator.apiKeySecret (eq (include "pucora.configuratorApiAuthEnabled" .) "true") }}
+                if curl -sf -H "X-API-Key: $(cat /secrets/api-key)" "$url" -o /config/pucora.json; then
+                {{- else }}
+                if curl -sf "$url" -o /config/pucora.json; then
+                {{- end }}
+                  test -s /config/pucora.json && exit 0
+                fi
+                sleep {{ .Values.configurator.gateway.fetchRetrySeconds }}
+              done
+              echo "failed to fetch gateway config from configurator API" >&2
+              exit 1
+          volumeMounts:
+            - name: runtime-config
+              mountPath: /config
+            {{- if or .Values.config.configurator.apiKeySecret (eq (include "pucora.configuratorApiAuthEnabled" .) "true") }}
+            - name: configurator-api-key
+              mountPath: /secrets
+              readOnly: true
+            {{- end }}
+        {{- end }}
+        {{- with .Values.initContainers }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -154,7 +189,11 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-            {{- if eq (include "pucora.useConfigVolume" .) "true" }}
+            {{- if eq (include "pucora.useConfiguratorConfig" .) "true" }}
+            - name: runtime-config
+              mountPath: /etc/pucora
+              readOnly: true
+            {{- else if eq (include "pucora.useConfigVolume" .) "true" }}
             - name: config
               mountPath: /etc/pucora/pucora.json
               subPath: pucora.json
@@ -169,7 +208,18 @@ spec:
       volumes:
         - name: tmp
           emptyDir: {}
-        {{- if eq (include "pucora.useConfigMap" .) "true" }}
+        {{- if eq (include "pucora.useConfiguratorConfig" .) "true" }}
+        - name: runtime-config
+          emptyDir: {}
+        {{- if or .Values.config.configurator.apiKeySecret (eq (include "pucora.configuratorApiAuthEnabled" .) "true") }}
+        - name: configurator-api-key
+          secret:
+            secretName: {{ .Values.config.configurator.apiKeySecret | default (include "pucora.configuratorApiSecretName" .) }}
+            items:
+              - key: {{ .Values.config.configurator.apiKeySecretKey | default .Values.configurator.api.auth.secretKey }}
+                path: api-key
+        {{- end }}
+        {{- else if eq (include "pucora.useConfigMap" .) "true" }}
         - name: config
           configMap:
             name: {{ include "pucora.configMapName" . }}

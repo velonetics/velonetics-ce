@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "endpoints": [
+    {
+      "endpoint": "/aws",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "host": ["https://dynamodb.us-east-1.amazonaws.com"],
+          "extra_config": {
+            "auth/aws-sigv4": {
+              "service": "dynamodb",
+              "region": "us-east-1"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

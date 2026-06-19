@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "endpoints": [
+    {
+      "endpoint": "/legacy",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "host": ["http://legacy.internal"],
+          "extra_config": {
+            "auth/ntlm": {
+              "user": "service-account",
+              "password": "changeme"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

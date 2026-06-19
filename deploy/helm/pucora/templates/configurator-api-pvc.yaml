@@ -1,0 +1,18 @@
+{{- if and .Values.configurator.enabled .Values.configurator.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "pucora.configuratorApiName" . }}
+  labels:
+    {{- include "pucora.labels" . | nindent 4 }}
+    app.kubernetes.io/component: configurator-api
+spec:
+  accessModes:
+    {{- toYaml .Values.configurator.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.configurator.persistence.size | quote }}
+  {{- if .Values.configurator.persistence.storageClass }}
+  storageClassName: {{ .Values.configurator.persistence.storageClass | quote }}
+  {{- end }}
+{{- end }}

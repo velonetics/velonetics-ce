@@ -90,6 +90,11 @@ var aliases = map[string]string{
 	"github.com/pucora/pucora-httpcache":                "qos/http-cache",
 	"github.com/pucora/pucora-circuitbreaker/gobreaker": "qos/circuit-breaker",
 
+	"github.com/pucora/pucora-apikeys":                  "auth/api-keys",
+	"github.com/pucora/pucora-basicauth":                "auth/basic",
+	"github.com/pucora/pucora-aws-sigv4":                "auth/aws-sigv4",
+	"github.com/pucora/pucora-gcp-auth":                 "auth/gcp",
+	"github.com/pucora/pucora-ntlm":                     "auth/ntlm",
 	"github.com/pucora/pucora-oauth2-clientcredentials": "auth/client-credentials",
 	"github.com/pucora/pucora-jose/validator":           "auth/validator",
 	"github.com/pucora/pucora-jose/signer":              "auth/signer",

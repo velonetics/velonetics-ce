@@ -87,10 +87,15 @@ metrics:
     annotations: {}
 
 config:
-  # "configmap", "secret", or "image".
+  # "configmap", "secret", "image", or "configurator" (load from configurator API).
   mode: configmap
   existingConfigMap: ""
   existingSecret: ""
+  # Used when mode is "configurator" (requires configurator.enabled).
+  configurator:
+    configName: default
+    apiKeySecret: ""
+    apiKeySecretKey: api-key
   pucoraJson: |
     {
       "version": 3,
@@ -289,3 +294,62 @@ prometheusRule:
 tests:
   enabled: true
   configCheck: true
+
+# Optional Pucora Configurator UI + API for authoring gateway configuration.
+# Source: https://github.com/pucora/pucora-configurator
+configurator:
+  enabled: false
+
+  api:
+    image:
+      repository: ghcr.io/pucora/pucora-config-api
+      tag: "2.2.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      port: 8081
+      annotations: {}
+    auth:
+      # Plain-text key creates a chart-managed Secret (prefer existingSecret in prod).
+      apiKey: ""
+      existingSecret: ""
+      secretKey: api-key
+    env:
+      CONFIG_STORE_PATH: /data
+      ALLOWED_ORIGINS: ""
+      PUBLIC_BASE_URL: ""
+    extraEnv: []
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+  web:
+    image:
+      repository: ghcr.io/pucora/pucora-config-web
+      tag: "2.2.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      port: 80
+      annotations: {}
+    resources: {}
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: configurator.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  gateway:
+    # Init container fetches /api/config/{configName}/pucora.json at pod start.
+    initImage:
+      repository: curlimages/curl
+      tag: "8.11.1"
+      pullPolicy: IfNotPresent
+    fetchRetries: 60
+    fetchRetrySeconds: 2

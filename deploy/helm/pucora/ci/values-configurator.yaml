@@ -1,0 +1,26 @@
+# Pucora Configurator UI + gateway fed from the configurator API.
+# Build and push images from https://github.com/pucora/pucora-configurator first.
+
+configurator:
+  enabled: true
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: config.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+  api:
+    auth:
+      existingSecret: pucora-configurator-api-key
+
+config:
+  mode: configurator
+  configurator:
+    configName: default
+
+replicaCount: 1
+
+tests:
+  enabled: false

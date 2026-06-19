@@ -67,6 +67,7 @@ make helm-cluster-test
 | [`ci/values-prod.yaml`](ci/values-prod.yaml) | Production: image config, HPA, PDB, NetworkPolicy, monitoring |
 | [`ci/values-aws-nlb.yaml`](ci/values-aws-nlb.yaml) | AWS NLB with cross-zone spread |
 | [`ci/values-istio.yaml`](ci/values-istio.yaml) | Istio sidecar injection with startup probe |
+| [`ci/values-configurator.yaml`](ci/values-configurator.yaml) | Configurator UI + gateway fed from API |
 
 ```bash
 helm install my-gateway ./deploy/helm/pucora -f deploy/helm/pucora/ci/values-prod.yaml
@@ -79,6 +80,7 @@ helm install my-gateway ./deploy/helm/pucora -f deploy/helm/pucora/ci/values-pro
 | `configmap` (default) | Mount `pucora.json` from a ConfigMap |
 | `secret` | Mount `pucora.json` from a Secret (sensitive credentials) |
 | `image` | Config baked into custom Docker image (production best practice) |
+| `configurator` | Fetch `pucora.json` from the in-cluster Configurator API at pod start |
 
 ```bash
 # Custom config file
@@ -95,6 +97,40 @@ helm install my-gateway ./deploy/helm/pucora \
   --set config.mode=image \
   --set image.repository=myregistry/pucora-gateway \
   --set image.tag=v1.0.0
+```
+
+## Configurator UI (optional)
+
+Deploy the [Pucora Configurator](https://github.com/pucora/pucora-configurator) alongside the gateway to author `pucora.json` in a browser.
+
+```bash
+# Build and push images from the configurator repo first:
+#   docker build -f deploy/Dockerfile.api -t ghcr.io/pucora/pucora-config-api:2.2.0 .
+#   docker build -f deploy/Dockerfile.web -t ghcr.io/pucora/pucora-config-web:2.2.0 .
+
+helm install my-stack ./deploy/helm/pucora \
+  -f deploy/helm/pucora/ci/values-configurator.yaml
+```
+
+| Value | Description |
+|-------|-------------|
+| `configurator.enabled` | Deploy Configurator API + web UI |
+| `configurator.ingress.*` | Expose the UI (nginx proxies `/api` to the API Service) |
+| `configurator.api.auth.*` | Optional `CONFIG_API_KEY` for the API |
+| `configurator.persistence.*` | PVC for saved profiles (`/data`) |
+| `config.mode=configurator` | Gateway init container loads `config.configurator.configName` from the API |
+
+**Workflow**
+
+1. Open the Configurator UI and build a gateway profile.
+2. Publish/save as `default` (or your `config.configurator.configName`).
+3. Restart gateway pods to pick up changes (`kubectl rollout restart deployment/...`) when using `config.mode=configurator`.
+
+**Alternative (GitOps):** keep `config.mode=configmap`, export from the UI, then `helm upgrade --set-file config.pucoraJson=./pucora.json`.
+
+```bash
+curl -s http://<configurator-api>:8081/api/config/default/pucora.json -o pucora.json
+helm upgrade my-gateway ./deploy/helm/pucora --set-file config.pucoraJson=./pucora.json
 ```
 
 Validate config before deploy (recommended in CI/CD):

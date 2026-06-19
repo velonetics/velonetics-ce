@@ -108,7 +108,7 @@ type BackendFactory interface {
 
 // HandlerFactory returns a Pucora router handler factory, ready to be passed to the Pucora RouterFactory
 type HandlerFactory interface {
-	NewHandlerFactory(logging.Logger, *metrics.Metrics, jose.RejecterFactory) router.HandlerFactory
+	NewHandlerFactory(logging.Logger, *metrics.Metrics, jose.RejecterFactory, config.ServiceConfig) router.HandlerFactory
 }
 
 // LoggerFactory returns a Pucora Logger factory, ready to be passed to the Pucora RouterFactory
@@ -230,7 +230,7 @@ func (e *ExecutorBuilder) NewCmdExecutor(ctx context.Context) cmd.Executor {
 
 		agentPing := make(chan string, len(cfg.AsyncAgents))
 
-		handlerF := e.HandlerFactory.NewHandlerFactory(logger, metricCollector, tokenRejecterFactory)
+		handlerF := e.HandlerFactory.NewHandlerFactory(logger, metricCollector, tokenRejecterFactory, cfg)
 		handlerF = otelgin.New(handlerF)
 
 		runServerChain := serverhttp.RunServerWithLoggerFactory(logger)

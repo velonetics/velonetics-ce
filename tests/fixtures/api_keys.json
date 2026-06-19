@@ -1,0 +1,28 @@
+{
+  "version": 3,
+  "extra_config": {
+    "auth/api-keys": {
+      "strategy": "header",
+      "identifier": "Authorization",
+      "keys": [
+        {
+          "key": "test-api-key-12345",
+          "roles": ["user", "admin"]
+        }
+      ],
+      "propagate_role": "X-Pucora-Role"
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/protected",
+      "backend": [{ "url_pattern": "/", "host": ["http://localhost:8080"] }],
+      "extra_config": {
+        "auth/api-keys": {
+          "roles": ["user"],
+          "client_max_rate": 100
+        }
+      }
+    }
+  ]
+}
