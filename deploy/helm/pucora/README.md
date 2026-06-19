@@ -33,7 +33,7 @@ helm test my-gateway
 ### Install from OCI registry (on release)
 
 ```bash
-helm install my-gateway oci://ghcr.io/pucora/charts/pucora --version 2.1.1
+helm install my-gateway oci://ghcr.io/pucora/charts/pucora --version 2.2.0
 ```
 
 ## Versioning discipline
