@@ -13,3 +13,4 @@ tests/fixtures/pucora.json.final
 .vscode
 /velonetics
 /velonetics-ce
+.DS_Store
