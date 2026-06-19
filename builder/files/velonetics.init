@@ -1,26 +1,26 @@
 #!/bin/bash
 ### BEGIN INIT INFO
-# Provides:          velonetics
+# Provides:          pucora
 # Required-Start:    $local_fs $remote_fs $network $syslog
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Init for Velonetics
-# Description:      Init and control system for Velonetics
+# Short-Description: Init for Pucora
+# Description:      Init and control system for Pucora
 ### END INIT INFO
 set -ue
 
-NAME="velonetics"
-DESC="velonetics"
+NAME="pucora"
+DESC="pucora"
 
 . /lib/lsb/init-functions
 
-PID=/var/run/velonetics.pid
+PID=/var/run/pucora.pid
 
 start() {
   start-stop-daemon --start --background --quiet \
                     --pidfile "$PID" --make-pidfile \
-                    --exec /usr/bin/velonetics run -c /etc/velonetics/velonetics.json
+                    --exec /usr/bin/pucora run -c /etc/pucora/pucora.json
 }
 
 stop() {

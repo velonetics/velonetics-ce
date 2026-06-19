@@ -107,6 +107,6 @@ SSE uses the same pattern. Pass `Content-Type` and set appropriate timeout:
 - Redeployments may wait for connection draining; use `max_shutdown_wait_time` to force-kill
 - Infrastructure must support persistent HTTP connections (load balancers, proxies)
 
-## Velonetics CE status
+## Pucora CE status
 
-**Implemented** in Velonetics CE via `no-op` encoding with flush-aware streaming proxy. See [velonetics-ce-master/docs/streaming-sse.md](../../velonetics-ce-master/docs/streaming-sse.md) and `examples/streaming/` for configuration, Docker demo, and audit rules (5.2.4–5.2.6).
+**Implemented** in Pucora CE via `no-op` encoding with flush-aware streaming proxy. See [velonetics-ce-master/docs/streaming-sse.md](../../velonetics-ce-master/docs/streaming-sse.md) and `examples/streaming/` for configuration, Docker demo, and audit rules (5.2.4–5.2.6).

@@ -2,7 +2,7 @@
 
 Namespace: `async/kafka` inside `async_agent[].extra_config`
 
-Connects a background Velonetics agent to Kafka topics for autonomous event consumption. Unlike endpoint Kafka subscribers, no HTTP client triggers processing.
+Connects a background Pucora agent to Kafka topics for autonomous event consumption. Unlike endpoint Kafka subscribers, no HTTP client triggers processing.
 
 ## How it works
 
@@ -81,7 +81,7 @@ Driver config matches `reader` in `backend/pubsub/subscriber/kafka`, except topi
 | Field | Default | Description |
 |-------|---------|-------------|
 | `brokers` | — | Kafka broker addresses (required) |
-| `client_id` | Velonetics version string | Client identifier |
+| `client_id` | Pucora version string | Client identifier |
 | `client_tls` | — | mTLS settings |
 | `sasl` | — | `{ mechanism, user, password, azure_event_hub, auth_identity }` |
 | `metadata_retry_max` | `3` | Reconnect attempts |

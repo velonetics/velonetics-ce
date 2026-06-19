@@ -12,8 +12,8 @@ import (
 )
 
 func TestGraphQLIntegration(t *testing.T) {
-	if _, err := os.Stat("../velonetics"); err != nil {
-		t.Skip("velonetics binary not built; run make build first")
+	if _, err := os.Stat("../pucora"); err != nil {
+		t.Skip("pucora binary not built; run make build first")
 	}
 
 	runner, _, err := NewIntegration(nil, nil, nil)

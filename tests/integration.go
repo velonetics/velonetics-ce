@@ -26,13 +26,13 @@ import (
 )
 
 var (
-	defaultBinPath     *string = flag.String("velonetics_bin_path", ".././velonetics", "The default path to the velonetics bin")
+	defaultBinPath     *string = flag.String("velonetics_bin_path", ".././pucora", "The default path to the pucora bin")
 	defaultSpecsPath   *string = flag.String("velonetics_specs_path", "./fixtures/specs", "The default path to the specs folder")
 	defaultBackendPort *int    = flag.Int("velonetics_backend_port", 8081, "The port for the mocked backend api")
 	defaultCfgPath     *string = flag.String(
 		"velonetics_config_path",
-		"fixtures/velonetics.json",
-		"The default path to the velonetics config",
+		"fixtures/pucora.json",
+		"The default path to the pucora config",
 	)
 	defaultDelay *time.Duration = flag.Duration(
 		"velonetics_delay",

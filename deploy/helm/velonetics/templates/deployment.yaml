@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "velonetics.fullname" . }}
+  name: {{ include "pucora.fullname" . }}
   labels:
-    {{- include "velonetics.labels" . | nindent 4 }}
-  {{- $gitopsAnnotations := include "velonetics.gitopsAnnotations" . }}
+    {{- include "pucora.labels" . | nindent 4 }}
+  {{- $gitopsAnnotations := include "pucora.gitopsAnnotations" . }}
   {{- if $gitopsAnnotations }}
   annotations:
     {{- $gitopsAnnotations | nindent 4 }}
@@ -15,7 +15,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "velonetics.selectorLabels" . | nindent 6 }}
+      {{- include "pucora.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -25,7 +25,7 @@ spec:
         {{- if and (eq .Values.config.mode "secret") (not .Values.config.existingSecret) }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- $sidecarAnnotations := include "velonetics.sidecarInjectionAnnotations" . }}
+        {{- $sidecarAnnotations := include "pucora.sidecarInjectionAnnotations" . }}
         {{- if $sidecarAnnotations }}
         {{- $sidecarAnnotations | nindent 8 }}
         {{- end }}
@@ -33,7 +33,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "velonetics.labels" . | nindent 8 }}
+        {{- include "pucora.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -42,7 +42,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "velonetics.serviceAccountName" . }}
+      serviceAccountName: {{ include "pucora.serviceAccountName" . }}
       {{- if .Values.priorityClassName }}
       priorityClassName: {{ .Values.priorityClassName | quote }}
       {{- end }}
@@ -103,7 +103,7 @@ spec:
               value: {{ .Values.opentelemetry.serviceName | quote }}
             {{- else }}
             - name: OTEL_SERVICE_NAME
-              value: {{ include "velonetics.fullname" . | quote }}
+              value: {{ include "pucora.fullname" . | quote }}
             {{- end }}
             {{- end }}
             {{- with .Values.extraEnv }}
@@ -154,10 +154,10 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-            {{- if eq (include "velonetics.useConfigVolume" .) "true" }}
+            {{- if eq (include "pucora.useConfigVolume" .) "true" }}
             - name: config
-              mountPath: /etc/velonetics/velonetics.json
-              subPath: velonetics.json
+              mountPath: /etc/pucora/pucora.json
+              subPath: pucora.json
               readOnly: true
             {{- end }}
             {{- with .Values.extraVolumeMounts }}
@@ -169,14 +169,14 @@ spec:
       volumes:
         - name: tmp
           emptyDir: {}
-        {{- if eq (include "velonetics.useConfigMap" .) "true" }}
+        {{- if eq (include "pucora.useConfigMap" .) "true" }}
         - name: config
           configMap:
-            name: {{ include "velonetics.configMapName" . }}
-        {{- else if eq (include "velonetics.useConfigSecret" .) "true" }}
+            name: {{ include "pucora.configMapName" . }}
+        {{- else if eq (include "pucora.useConfigSecret" .) "true" }}
         - name: config
           secret:
-            secretName: {{ include "velonetics.configSecretName" . }}
+            secretName: {{ include "pucora.configSecretName" . }}
         {{- end }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
@@ -196,7 +196,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  {{- include "velonetics.selectorLabels" . | nindent 18 }}
+                  {{- include "pucora.selectorLabels" . | nindent 18 }}
               topologyKey: kubernetes.io/hostname
           {{- else }}
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -204,7 +204,7 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    {{- include "velonetics.selectorLabels" . | nindent 20 }}
+                    {{- include "pucora.selectorLabels" . | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
           {{- end }}
         {{- end }}

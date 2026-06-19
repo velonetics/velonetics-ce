@@ -1,3 +1,3 @@
-module github.com/velonetics/soap-mock-backend
+module github.com/pucora/soap-mock-backend
 
 go 1.25.0

@@ -16,7 +16,7 @@ for i in $(seq 1 30); do
   fi
 done
 
-echo "==> Waiting for Velonetics gateway (WebSocket direct probe)"
+echo "==> Waiting for Pucora gateway (WebSocket direct probe)"
 for i in $(seq 1 90); do
   if go run ./smoke/main.go -url "ws://127.0.0.1:8080/ws/echo" -message "ready" -timeout 3s >/dev/null 2>&1; then
     break

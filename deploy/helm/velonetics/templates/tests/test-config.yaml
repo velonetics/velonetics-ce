@@ -1,10 +1,10 @@
-{{- if and .Values.tests.enabled .Values.tests.configCheck (eq (include "velonetics.useConfigVolume" .) "true") }}
+{{- if and .Values.tests.enabled .Values.tests.configCheck (eq (include "pucora.useConfigVolume" .) "true") }}
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ include "velonetics.fullname" . }}-config-test
+  name: {{ include "pucora.fullname" . }}-config-test
   labels:
-    {{- include "velonetics.labels" . | nindent 4 }}
+    {{- include "pucora.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: test
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
@@ -14,23 +14,23 @@ spec:
     - name: config-check
       image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
       command:
-        - /usr/bin/velonetics
+        - /usr/bin/pucora
         - check
         - -c
-        - /etc/velonetics/velonetics.json
+        - /etc/pucora/pucora.json
       volumeMounts:
         - name: config
-          mountPath: /etc/velonetics/velonetics.json
-          subPath: velonetics.json
+          mountPath: /etc/pucora/pucora.json
+          subPath: pucora.json
           readOnly: true
   volumes:
-    {{- if eq (include "velonetics.useConfigMap" .) "true" }}
+    {{- if eq (include "pucora.useConfigMap" .) "true" }}
     - name: config
       configMap:
-        name: {{ include "velonetics.configMapName" . }}
-    {{- else if eq (include "velonetics.useConfigSecret" .) "true" }}
+        name: {{ include "pucora.configMapName" . }}
+    {{- else if eq (include "pucora.useConfigSecret" .) "true" }}
     - name: config
       secret:
-        secretName: {{ include "velonetics.configSecretName" . }}
+        secretName: {{ include "pucora.configSecretName" . }}
     {{- end }}
 {{- end }}

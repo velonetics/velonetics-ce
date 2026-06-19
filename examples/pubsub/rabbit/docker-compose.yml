@@ -10,7 +10,7 @@ services:
       retries: 20
       start_period: 10s
 
-  velonetics:
+  pucora:
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -21,8 +21,8 @@ services:
     environment:
       RABBIT_SERVER_URL: guest:guest@rabbitmq:5672
     volumes:
-      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+      - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       rabbitmq:
         condition: service_healthy
-    command: ["run", "-c", "/etc/velonetics/velonetics.json"]
+    command: ["run", "-c", "/etc/pucora/pucora.json"]

@@ -60,7 +60,7 @@ You can mix multiple backends and protocols in a single endpoint (e.g. REST + gR
 | Async Agents + AMQP driver | Kafka Async Driver |
 | SOAP |
 
-## Velonetics bugfix changelog
+## Pucora bugfix changelog
 
 See [BUGFIX-CHANGELOG.md](BUGFIX-CHANGELOG.md) for module versions and fixes applied during non-REST connectivity hardening (websocket, gRPC, pubsub/kafka, SOAP, AMQP, GraphQL, streaming).
 

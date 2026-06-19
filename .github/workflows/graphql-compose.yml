@@ -43,7 +43,7 @@ jobs:
       - name: Fetch JSON schema
         run: |
           curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
-            https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.2/v2.13/velonetics.json
+            https://raw.githubusercontent.com/pucora/velonetics-schema/v2.0.2/v2.13/pucora.json
 
       - name: GraphQL Docker Compose smoke
         run: make graphql-compose-test

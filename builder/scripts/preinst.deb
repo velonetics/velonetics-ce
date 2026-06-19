@@ -2,12 +2,12 @@
 
 set -e
 
-USER=velonetics
+USER=pucora
 
 if ! getent passwd $USER >/dev/null ; then
-  adduser --system --disabled-login --gecos "Velonetics" --shell /bin/false --no-create-home $USER > /dev/null
+  adduser --system --disabled-login --gecos "Pucora" --shell /bin/false --no-create-home $USER > /dev/null
 fi
 
-if [ -x "/etc/init.d/velonetics" ] || [ -e "/etc/init/velonetics.conf" ]; then
-	service velonetics stop || exit $?
+if [ -x "/etc/init.d/pucora" ] || [ -e "/etc/init/pucora.conf" ]; then
+	service pucora stop || exit $?
 fi

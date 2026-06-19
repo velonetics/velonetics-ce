@@ -9,7 +9,7 @@
 		"header": {
 			"content-type": ["application/xml"],
 			"Cache-Control": ["public, max-age=3600"],
-			"X-Velonetics-Completed": ["true"]
+			"X-Pucora-Completed": ["true"]
 		}
 	}
 }

@@ -1,16 +1,16 @@
 apiVersion: v2
-name: velonetics
-description: Helm chart for deploying the Velonetics API Gateway on Kubernetes
+name: pucora
+description: Helm chart for deploying the Pucora API Gateway on Kubernetes
 type: application
 version: 2.2.0
 appVersion: "2.2.0"
 keywords:
   - api-gateway
-  - velonetics
+  - pucora
   - microservices
-home: https://velonetics.io
+home: https://pucora.io
 sources:
-  - https://github.com/velonetics/velonetics-ce
+  - https://github.com/pucora/velonetics-ce
 maintainers:
-  - name: Velonetics Team
-    email: community@velonetics.io
+  - name: Pucora Team
+    email: community@pucora.io

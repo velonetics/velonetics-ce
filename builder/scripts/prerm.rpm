@@ -2,6 +2,6 @@
 
 set -e
 
-if [ -e "/etc/init/velonetics.conf" ]; then
-	initctl stop velonetics > /dev/null
+if [ -e "/etc/init/pucora.conf" ]; then
+	initctl stop pucora > /dev/null
 fi

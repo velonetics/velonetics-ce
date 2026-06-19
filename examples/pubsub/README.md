@@ -28,4 +28,4 @@ Or from the CE root:
 make pubsub-nats-compose-test
 ```
 
-Each subfolder has its own `docker-compose.yml`, `velonetics.json`, and `scripts/smoke.sh`.
+Each subfolder has its own `docker-compose.yml`, `pucora.json`, and `scripts/smoke.sh`.

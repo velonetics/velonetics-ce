@@ -1,16 +1,16 @@
-package velonetics
+package pucora
 
 import (
 	"fmt"
 
-	cel "github.com/velonetics/velonetics-cel/v2"
-	jsonschema "github.com/velonetics/velonetics-jsonschema/v2"
-	lua "github.com/velonetics/velonetics-lua/v2/proxy"
-	metrics "github.com/velonetics/velonetics-metrics/v2/gin"
-	opencensus "github.com/velonetics/velonetics-opencensus/v2"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
+	cel "github.com/pucora/velonetics-cel/v2"
+	jsonschema "github.com/pucora/velonetics-jsonschema/v2"
+	lua "github.com/pucora/velonetics-lua/v2/proxy"
+	metrics "github.com/pucora/velonetics-metrics/v2/gin"
+	opencensus "github.com/pucora/velonetics-opencensus/v2"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
 )
 
 func internalNewProxyFactory(logger logging.Logger, backendFactory proxy.BackendFactory,

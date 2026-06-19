@@ -1,28 +1,28 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "velonetics.fullname" . }}
+  name: {{ include "pucora.fullname" . }}
   labels:
-    {{- include "velonetics.labels" . | nindent 4 }}
+    {{- include "pucora.labels" . | nindent 4 }}
     {{- if .Values.service.nlb.enabled }}
     {{- with .Values.service.nlb.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
     {{- end }}
-  {{- $serviceAnnotations := include "velonetics.serviceAnnotations" . }}
+  {{- $serviceAnnotations := include "pucora.serviceAnnotations" . }}
   {{- if $serviceAnnotations }}
   annotations:
     {{- $serviceAnnotations | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ include "velonetics.serviceType" . }}
+  type: {{ include "pucora.serviceType" . }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
       protocol: TCP
       name: http
   selector:
-    {{- include "velonetics.selectorLabels" . | nindent 4 }}
+    {{- include "pucora.selectorLabels" . | nindent 4 }}
   {{- if .Values.service.sessionAffinity }}
   sessionAffinity: {{ .Values.service.sessionAffinity }}
   {{- end }}
@@ -30,7 +30,7 @@ spec:
   sessionAffinityConfig:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if eq (include "velonetics.isLoadBalancerService" .) "true" }}
+  {{- if eq (include "pucora.isLoadBalancerService" .) "true" }}
   {{- $loadBalancerIP := .Values.service.loadBalancerIP }}
   {{- if and .Values.service.nlb.enabled .Values.service.nlb.loadBalancerIP }}
   {{- $loadBalancerIP = .Values.service.nlb.loadBalancerIP }}

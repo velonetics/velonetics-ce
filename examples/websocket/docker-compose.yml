@@ -10,7 +10,7 @@ services:
       retries: 10
       start_period: 5s
 
-  velonetics:
+  pucora:
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -19,8 +19,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+      - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       mock-backend:
         condition: service_healthy
-    command: ["run", "-c", "/etc/velonetics/velonetics.json"]
+    command: ["run", "-c", "/etc/pucora/pucora.json"]

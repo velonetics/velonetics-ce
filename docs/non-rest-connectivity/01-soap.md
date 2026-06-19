@@ -1,8 +1,8 @@
 # SOAP Integration
 
-**Edition:** Community Edition (Velonetics CE)  
+**Edition:** Community Edition (Pucora CE)  
 **Namespace:** `backend/soap`  
-**Official docs:** [Velonetics SOAP Backend](../../velonetics-ce-master/docs/soap.md) · [KrakenD SOAP](https://www.krakend.io/docs/enterprise/backends/soap/)
+**Official docs:** [Pucora SOAP Backend](../../velonetics-ce-master/docs/soap.md) · [KrakenD SOAP](https://www.krakend.io/docs/enterprise/backends/soap/)
 
 ## What it does
 

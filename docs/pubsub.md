@@ -1,6 +1,6 @@
 # Publisher/Subscribe (Kafka, NATS, Cloud)
 
-Velonetics connects HTTP endpoints to publish/subscribe messaging systems using the `backend/pubsub/publisher` and `backend/pubsub/subscriber` namespaces.
+Pucora connects HTTP endpoints to publish/subscribe messaging systems using the `backend/pubsub/publisher` and `backend/pubsub/subscriber` namespaces.
 
 ## What it does
 

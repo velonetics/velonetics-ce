@@ -1,10 +1,10 @@
-![Velonetics](velonetics.png)
+![Pucora](pucora.png)
 
-# Velonetics
+# Pucora
 
-Velonetics is an extensible, ultra-high performance API Gateway that helps you effortlessly adopt microservices and secure communications. Velonetics is easy to operate and run and scales out without a single point of failure.
+Pucora is an extensible, ultra-high performance API Gateway that helps you effortlessly adopt microservices and secure communications. Pucora is easy to operate and run and scales out without a single point of failure.
 
-**Velonetics Community Edition** (or *Velonetics-CE*) is an open-source API gateway.
+**Pucora Community Edition** (or *Pucora-CE*) is an open-source API gateway.
 
 **WebSockets:** RFC-6455 multiplex and direct proxy to `ws://` / `wss://` backends — see [docs/websockets.md](docs/websockets.md) for configuration, JWT on upgrade, and Docker Compose examples.
 
@@ -12,7 +12,7 @@ Velonetics is an extensible, ultra-high performance API Gateway that helps you e
 
 - **Easy integration** of an ultra-high performance gateway.
 - **Effortlessly transition to microservices** and Backend For Frontend implementations.
-- **True linear scalability**: Thanks to its **stateless design**, every Velonetics node can operate independently in the cluster without any coordination or centralized persistence.
+- **True linear scalability**: Thanks to its **stateless design**, every Pucora node can operate independently in the cluster without any coordination or centralized persistence.
 - **Low operational cost**: +70K reqs/s on a single instance of regular size. Super low memory consumption with high traffic (usually under 50MB w/ +1000 concurrent). Fewer machines. Smaller machines. Lower budget.
 - **Platform-agnostic**. Whether you work in a Cloud-native environment (e.g., Kubernetes) or self-hosted on-premises.
 - **No vendor lock-in**: Reuse the best existing open-source and proprietary tools rather than having everything in the gateway (telemetry, identity providers, etc.)
@@ -27,9 +27,9 @@ Velonetics is an extensible, ultra-high performance API Gateway that helps you e
 - **Concurrent calls**: Serve content faster than consuming backends directly.
 - **SSL** and  **HTTP2** ready
 - **Throttling**: Limits of usage in the router and proxy layers
-- **Multi-layer rate-limiting** for the end-user and between Velonetics and your services, including bursting, load balancing, and circuit breaker.
+- **Multi-layer rate-limiting** for the end-user and between Pucora and your services, including bursting, load balancing, and circuit breaker.
 - **Telemetry** and dashboards of all sorts: Datadog, Zipkin, Jaeger, Prometheus, Grafana...
-- **WebSockets** (RFC-6455): multiplexed or direct proxy to `ws://` / `wss://` backends — see [docs/websockets.md](docs/websockets.md) and the standalone module [velonetics/velonetics-websocket](https://github.com/velonetics/velonetics-websocket)
+- **WebSockets** (RFC-6455): multiplexed or direct proxy to `ws://` / `wss://` backends — see [docs/websockets.md](docs/websockets.md) and the standalone module [pucora/velonetics-websocket](https://github.com/pucora/velonetics-websocket)
 - **Extensible** with Go plugins, Lua scripts, Martian, or Google CEL spec.
 
 ## Run
@@ -43,13 +43,13 @@ make build
 Run with the sample configuration:
 
 ```
-./velonetics run -c velonetics.json
+./pucora run -c pucora.json
 ```
 
 For WebSocket-only local testing (requires a `ws://` backend on port 8081):
 
 ```
-./velonetics run -c velonetics-ws.json
+./pucora run -c velonetics-ws.json
 # or: make ws-compose-test
 ```
 
@@ -69,13 +69,13 @@ See [examples/websocket/README.md](examples/websocket/README.md).
 
 ### Single image
 
-Published on Docker Hub: **[niteesh20/velonetics](https://hub.docker.com/r/niteesh20/velonetics)**
+Published on Docker Hub: **[niteesh20/pucora](https://hub.docker.com/r/niteesh20/pucora)**
 
 ```
-docker pull niteesh20/velonetics:2.0.0
+docker pull niteesh20/pucora:2.0.0
 ```
 
-On each GitHub release, CI builds and pushes `niteesh20/velonetics:$TAG` when `DOCKER_USERNAME` and `DOCKER_PASSWORD` repo secrets are set (`DOCKER_USERNAME` = `niteesh20`).
+On each GitHub release, CI builds and pushes `niteesh20/pucora:$TAG` when `DOCKER_USERNAME` and `DOCKER_PASSWORD` repo secrets are set (`DOCKER_USERNAME` = `niteesh20`).
 
 Build locally:
 
@@ -86,20 +86,20 @@ make docker
 Run it:
 
 ```
-docker run -it -p "8080:8080" -v $(pwd)/velonetics.json:/etc/velonetics/velonetics.json niteesh20/velonetics:2.0.0 run -c /etc/velonetics/velonetics.json
+docker run -it -p "8080:8080" -v $(pwd)/pucora.json:/etc/pucora/pucora.json niteesh20/pucora:2.0.0 run -c /etc/pucora/pucora.json
 ```
 
 ## Kubernetes / Helm
 
-Deploy to Kubernetes with the official Helm chart from the [velonetics-ce](https://github.com/velonetics/velonetics-ce) repository:
+Deploy to Kubernetes with the official Helm chart from the [velonetics-ce](https://github.com/pucora/velonetics-ce) repository:
 
 ```bash
-git clone https://github.com/velonetics/velonetics-ce.git
+git clone https://github.com/pucora/velonetics-ce.git
 cd velonetics-ce
-helm install my-gateway ./deploy/helm/velonetics
+helm install my-gateway ./deploy/helm/pucora
 ```
 
-See [deploy/helm/velonetics/README.md](deploy/helm/velonetics/README.md) for configuration modes (ConfigMap vs immutable image), Ingress, HPA, PDB, and Prometheus integration.
+See [deploy/helm/pucora/README.md](deploy/helm/pucora/README.md) for configuration modes (ConfigMap vs immutable image), Ingress, HPA, PDB, and Prometheus integration.
 
 ## Build
 
@@ -117,13 +117,13 @@ make build_on_docker
 
 ## Configuration
 
-Velonetics uses a JSON configuration format compatible with Velonetics configs. Configuration files are named `velonetics.json` and placed in `/etc/velonetics/`.
+Pucora uses a JSON configuration format compatible with Pucora configs. Configuration files are named `pucora.json` and placed in `/etc/pucora/`.
 
-Legacy Velonetics namespace keys in `extra_config` are still accepted for backward compatibility.
+Legacy Pucora namespace keys in `extra_config` are still accepted for backward compatibility.
 
 ### WebSockets
 
-Velonetics CE supports RFC-6455 WebSocket proxying (multiplex and direct modes, JWT on upgrade, reconnect, and OTEL metrics). See the full guide:
+Pucora CE supports RFC-6455 WebSocket proxying (multiplex and direct modes, JWT on upgrade, reconnect, and OTEL metrics). See the full guide:
 
 - [docs/websockets.md](docs/websockets.md) — configuration, envelope protocol, JWT, Docker Compose stack
 - [tests/fixtures/ws_*.json](tests/fixtures/) — sample configs

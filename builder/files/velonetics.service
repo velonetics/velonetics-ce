@@ -1,11 +1,11 @@
 [Unit]
-Description=velonetics API Gateway
-Documentation=https://velonetics.io
+Description=pucora API Gateway
+Documentation=https://pucora.io
 After=network.target
 
 [Service]
-User=velonetics
-ExecStart=/usr/bin/velonetics run -c /etc/velonetics/velonetics.json
+User=pucora
+ExecStart=/usr/bin/pucora run -c /etc/pucora/pucora.json
 ExecStop=/bin/kill -s TERM $MAINPID
 # Having non-zero Limit*s causes performance problems due to accounting overhead
 # in the kernel. We recommend using cgroups to do container-local accounting.

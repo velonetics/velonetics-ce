@@ -4,7 +4,7 @@
   "extra_config": {
     "telemetry/logging": {
       "level": "INFO",
-      "prefix": "[VELONETICS]",
+      "prefix": "[PUCORA]",
       "stdout": true
     },
     "telemetry/usage": {
@@ -28,7 +28,7 @@
           "extra_config": {
             "backend/graphql": {
               "type": "mutation",
-              "query_path": "/etc/velonetics/graphql/mutations/review.graphql",
+              "query_path": "/etc/pucora/graphql/mutations/review.graphql",
               "variables": {
                 "ep": "JEDI",
                 "review": {
@@ -53,7 +53,7 @@
           "extra_config": {
             "backend/graphql": {
               "type": "query",
-              "query_path": "/etc/velonetics/graphql/queries/hero.graphql",
+              "query_path": "/etc/pucora/graphql/queries/hero.graphql",
               "variables": {
                 "episode": "{episode}",
                 "withFriends": false
@@ -86,7 +86,7 @@
           "extra_config": {
             "backend/graphql": {
               "type": "query",
-              "query_path": "/etc/velonetics/graphql/queries/user.graphql",
+              "query_path": "/etc/pucora/graphql/queries/user.graphql",
               "variables": {
                 "user": "{id_user}"
               },
@@ -102,7 +102,7 @@
           "extra_config": {
             "backend/graphql": {
               "type": "query",
-              "query_path": "/etc/velonetics/graphql/queries/user_metadata.graphql",
+              "query_path": "/etc/pucora/graphql/queries/user_metadata.graphql",
               "variables": {
                 "user": "{id_user}"
               },

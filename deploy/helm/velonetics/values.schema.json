@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "title": "Velonetics Helm Chart Values",
+  "title": "Pucora Helm Chart Values",
   "type": "object",
   "properties": {
     "replicaCount": {

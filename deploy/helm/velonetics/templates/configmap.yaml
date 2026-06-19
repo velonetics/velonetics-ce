@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "velonetics.configMapName" . }}
+  name: {{ include "pucora.configMapName" . }}
   labels:
-    {{- include "velonetics.labels" . | nindent 4 }}
+    {{- include "pucora.labels" . | nindent 4 }}
 data:
-  velonetics.json: |
+  pucora.json: |
 {{- .Values.config.veloneticsJson | nindent 4 }}
 {{- end }}

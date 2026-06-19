@@ -1,6 +1,6 @@
 # HTTP Streaming & SSE Example
 
-Local Docker Compose stack demonstrating KrakenD-parity HTTP streaming through Velonetics using `no-op` encoding.
+Local Docker Compose stack demonstrating KrakenD-parity HTTP streaming through Pucora using `no-op` encoding.
 
 ## Quick start
 

@@ -26,5 +26,5 @@ make graphql-compose-test
 
 - `mock-backend/` — minimal GraphQL server on port 4000
 - `graphql/` — `.graphql` query files loaded via `query_path`
-- `velonetics.json` — gateway configuration
+- `pucora.json` — gateway configuration
 - `scripts/smoke.sh` — curl-based smoke tests

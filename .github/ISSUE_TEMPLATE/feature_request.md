@@ -6,8 +6,8 @@ labels: ''
 assignees: ''
 
 ---
-**Version of Velonetics you are using**
-Get it with: `velonetics version`
+**Version of Pucora you are using**
+Get it with: `pucora version`
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

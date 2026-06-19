@@ -2,9 +2,9 @@
 
 ## Lura module published
 
-- Repository: https://github.com/velonetics/lura
+- Repository: https://github.com/pucora/lura
 - Tag: `v2.0.4` (GraphQL namespace fix, method inheritance, GET query URL merge)
-- Go module: `github.com/velonetics/lura/v2`
+- Go module: `github.com/pucora/lura/v2`
 - Config namespace: `backend/graphql` (alias for `transport/http/client/graphql`)
 
 ## CE integration
@@ -34,4 +34,4 @@ make graphql-compose-test
 
 ## Dependency
 
-CE `go.mod` requires `github.com/velonetics/lura/v2 v2.0.4` or newer with GraphQL fixes.
+CE `go.mod` requires `github.com/pucora/lura/v2 v2.0.4` or newer with GraphQL fixes.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Generate go.work at the Velonetics workspace root (parent of this repo).
+# Generate go.work at the Pucora workspace root (parent of this repo).
 #
 # Usage (from velonetics-ce-master or workspace root):
 #   ./scripts/init-workspace.sh

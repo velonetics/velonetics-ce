@@ -17,7 +17,7 @@
 			"headers":{
 				"Accept-Encoding":["gzip"],
 				"Authorization":["bearer 123456"],
-				"User-Agent":["Velonetics Version 2.0.0"],
+				"User-Agent":["Pucora Version 2.0.0"],
 				"X-Forwarded-Host":["localhost:8080"],
 				"X-Y-Z":["true"]
 			},
@@ -30,7 +30,7 @@
 		"header": {
 			"content-type": ["application/json; charset=utf-8"],
 			"Cache-Control": ["public, max-age=3600"],
-			"X-Velonetics-Completed": ["true"]
+			"X-Pucora-Completed": ["true"]
 		}
 	}
 }

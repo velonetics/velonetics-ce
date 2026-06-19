@@ -5,7 +5,7 @@ GATEWAY="${GATEWAY:-http://127.0.0.1:8080}"
 
 wait_gateway() {
   local url="${1:-${GATEWAY}/__health}"
-  echo "==> Waiting for Velonetics gateway at ${url}"
+  echo "==> Waiting for Pucora gateway at ${url}"
   for i in $(seq 1 90); do
     if curl -fsS "$url" >/dev/null 2>&1; then
       echo "OK: gateway ready"

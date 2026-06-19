@@ -1,8 +1,8 @@
 # SOAP Backend Integration
 
-Velonetics connects legacy SOAP/XML services to modern REST clients. The gateway crafts SOAP request bodies from Go templates, optionally applies WS-Security, and transforms XML responses to JSON (or other encodings).
+Pucora connects legacy SOAP/XML services to modern REST clients. The gateway crafts SOAP request bodies from Go templates, optionally applies WS-Security, and transforms XML responses to JSON (or other encodings).
 
-Implemented by [`velonetics-soap`](https://github.com/velonetics/velonetics-soap) via `extra_config.backend/soap` on a backend.
+Implemented by [`velonetics-soap`](https://github.com/pucora/velonetics-soap) via `extra_config.backend/soap` on a backend.
 
 ## Quick start
 
@@ -63,7 +63,7 @@ Minimal config:
 |-------|-------------|
 | `soap_action` | Sets HTTP `SOAPAction` header (SOAP 1.1, quoted automatically) |
 
-If omitted, Velonetics can derive the action from WSDL when `wsdl` is configured.
+If omitted, Pucora can derive the action from WSDL when `wsdl` is configured.
 
 ### WSDL (parse-only)
 

@@ -1,10 +1,10 @@
-package velonetics
+package pucora
 
 import (
-	rss "github.com/velonetics/velonetics-rss/v2"
-	xml "github.com/velonetics/velonetics-xml/v2"
-	ginxml "github.com/velonetics/velonetics-xml/v2/gin"
-	"github.com/velonetics/lura/v2/router/gin"
+	rss "github.com/pucora/velonetics-rss/v2"
+	xml "github.com/pucora/velonetics-xml/v2"
+	ginxml "github.com/pucora/velonetics-xml/v2/gin"
+	"github.com/pucora/lura/v2/router/gin"
 )
 
 // RegisterEncoders registers all the available encoders

@@ -14,13 +14,13 @@ import (
 	"time"
 
 	"github.com/coder/websocket"
-	ws "github.com/velonetics/velonetics-websocket/v2"
+	ws "github.com/pucora/velonetics-websocket/v2"
 )
 
 func TestWebSocketDirectEchoIntegration(t *testing.T) {
-	bin := "../velonetics"
+	bin := "../pucora"
 	if _, err := os.Stat(bin); err != nil {
-		t.Skip("velonetics binary not built; run make build first")
+		t.Skip("pucora binary not built; run make build first")
 	}
 
 	backendLn, err := net.Listen("tcp", "127.0.0.1:0")

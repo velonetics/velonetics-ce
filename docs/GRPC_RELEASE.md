@@ -2,9 +2,9 @@
 
 ## Module published
 
-- Repository: https://github.com/velonetics/velonetics-grpc
+- Repository: https://github.com/pucora/velonetics-grpc
 - Tag: `v2.0.1` (parity gap closure)
-- Go module: `github.com/velonetics/velonetics-grpc/v2`
+- Go module: `github.com/pucora/velonetics-grpc/v2`
 
 ### v2.0.1 highlights
 
@@ -19,7 +19,7 @@
 ## CE release
 
 - Version: `v2.0.2`
-- Requires: `github.com/velonetics/velonetics-grpc/v2 v2.0.1`
+- Requires: `github.com/pucora/velonetics-grpc/v2 v2.0.1`
 
 ## CE integration
 

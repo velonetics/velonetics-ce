@@ -1,4 +1,4 @@
-package velonetics
+package pucora
 
 import (
 	"context"
@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	cmd "github.com/velonetics/velonetics-cobra/v2"
-	"github.com/velonetics/lura/v2/logging"
-	proxy "github.com/velonetics/lura/v2/proxy/plugin"
-	client "github.com/velonetics/lura/v2/transport/http/client/plugin"
-	server "github.com/velonetics/lura/v2/transport/http/server/plugin"
+	cmd "github.com/pucora/velonetics-cobra/v2"
+	"github.com/pucora/lura/v2/logging"
+	proxy "github.com/pucora/lura/v2/proxy/plugin"
+	client "github.com/pucora/lura/v2/transport/http/client/plugin"
+	server "github.com/pucora/lura/v2/transport/http/server/plugin"
 	"github.com/spf13/cobra"
 )
 
@@ -89,9 +89,9 @@ var (
 
 	testPluginCmd = &cobra.Command{
 		Use:     "test-plugin [flags] [artifacts]",
-		Short:   "Tests that one or more plugins are loadable into Velonetics.",
+		Short:   "Tests that one or more plugins are loadable into Pucora.",
 		Run:     testPluginFunc,
-		Example: "velonetics test-plugin -scm ./plugins/my_plugin.so ./plugins/my_other_plugin.so",
+		Example: "pucora test-plugin -scm ./plugins/my_plugin.so ./plugins/my_other_plugin.so",
 	}
 
 	serverExpectedFlag   cmd.FlagBuilder

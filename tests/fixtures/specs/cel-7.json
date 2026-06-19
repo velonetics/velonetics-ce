@@ -12,7 +12,7 @@
 			"foo":42,
 			"headers":{
 				"Accept-Encoding":["gzip"],
-				"User-Agent":["Velonetics Version 2.0.0"],
+				"User-Agent":["Pucora Version 2.0.0"],
 				"X-Forwarded-Host":["localhost:8080"]
 			},
 			"path":"/param_forwarding/ok/1234567890qwertyuio/foobar",
@@ -21,7 +21,7 @@
 		"header": {
 			"content-type": ["application/json; charset=utf-8"],
 			"Cache-Control": ["public, max-age=3600"],
-			"X-Velonetics-Completed": ["true"]
+			"X-Pucora-Completed": ["true"]
 		}
 	}
 }

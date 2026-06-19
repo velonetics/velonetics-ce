@@ -1,9 +1,9 @@
-# Default values for velonetics.
+# Default values for pucora.
 
 replicaCount: 2
 
 image:
-  repository: niteesh20/velonetics
+  repository: niteesh20/pucora
   tag: "2.2.0"
   pullPolicy: IfNotPresent
 
@@ -94,12 +94,12 @@ config:
   veloneticsJson: |
     {
       "version": 3,
-      "name": "Velonetics Gateway",
+      "name": "Pucora Gateway",
       "port": 8080,
       "extra_config": {
         "telemetry/logging": {
           "level": "INFO",
-          "prefix": "[VELONETICS]",
+          "prefix": "[PUCORA]",
           "stdout": true
         },
         "telemetry/metrics": {
@@ -135,7 +135,7 @@ command: []
 args:
   - run
   - -c
-  - /etc/velonetics/velonetics.json
+  - /etc/pucora/pucora.json
   - -p
   - "8080"
 
@@ -207,7 +207,7 @@ ingress:
   className: ""
   annotations: {}
   hosts:
-    - host: velonetics.local
+    - host: pucora.local
       paths:
         - path: /
           pathType: Prefix
@@ -252,7 +252,7 @@ keda:
   # - type: prometheus
   #   metadata:
   #     serverAddress: http://prometheus:9090
-  #     query: sum(rate(http_requests_total{service="velonetics"}[2m]))
+  #     query: sum(rate(http_requests_total{service="pucora"}[2m]))
   #     threshold: "100"
 
 podDisruptionBudget:
@@ -278,13 +278,13 @@ prometheusRule:
   namespace: ""
   labels: {}
   rules: []
-  # - alert: VeloneticsDown
-  #   expr: up{job="velonetics"} == 0
+  # - alert: PucoraDown
+  #   expr: up{job="pucora"} == 0
   #   for: 5m
   #   labels:
   #     severity: critical
   #   annotations:
-  #     summary: Velonetics gateway is down
+  #     summary: Pucora gateway is down
 
 tests:
   enabled: true

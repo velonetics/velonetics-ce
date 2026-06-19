@@ -3,9 +3,9 @@ services:
     image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Velonetics_PubSub_2025!"
+      MSSQL_SA_PASSWORD: "Pucora_PubSub_2025!"
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Velonetics_PubSub_2025!" -Q "SELECT 1" || exit 1
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Pucora_PubSub_2025!" -Q "SELECT 1" || exit 1
       interval: 10s
       timeout: 5s
       retries: 20
@@ -20,7 +20,7 @@ services:
       - ./config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
     environment:
       SQL_SERVER: sqledge
-      MSSQL_SA_PASSWORD: "Velonetics_PubSub_2025!"
+      MSSQL_SA_PASSWORD: "Pucora_PubSub_2025!"
       ACCEPT_EULA: "Y"
       EMULATOR_HTTP_PORT: 5300
     depends_on:
@@ -33,7 +33,7 @@ services:
       retries: 30
       start_period: 30s
 
-  velonetics:
+  pucora:
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -44,8 +44,8 @@ services:
     environment:
       SERVICEBUS_CONNECTION_STRING: "Endpoint=sb://servicebus-emulator;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
     volumes:
-      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+      - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       servicebus-emulator:
         condition: service_healthy
-    command: ["run", "-c", "/etc/velonetics/velonetics.json"]
+    command: ["run", "-c", "/etc/pucora/pucora.json"]

@@ -32,7 +32,7 @@
           "alg": "HS256",
           "audience": ["http://api.example.com"],
           "roles_key": "roles",
-          "issuer": "https://velonetics.io",
+          "issuer": "https://pucora.io",
           "roles": ["role_a", "role_c"],
           "jwk_url": "http://127.0.0.1:8081/jwk/symmetric",
           "disable_jwk_security": true

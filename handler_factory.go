@@ -1,21 +1,21 @@
-package velonetics
+package pucora
 
 import (
 	"fmt"
 
-	botdetector "github.com/velonetics/velonetics-botdetector/v2/gin"
-	jose "github.com/velonetics/velonetics-jose/v2"
-	ginjose "github.com/velonetics/velonetics-jose/v2/gin"
-	lua "github.com/velonetics/velonetics-lua/v2/router/gin"
-	metrics "github.com/velonetics/velonetics-metrics/v2/gin"
-	opencensus "github.com/velonetics/velonetics-opencensus/v2/router/gin"
-	ratelimit "github.com/velonetics/velonetics-ratelimit/v3/router/gin"
-	wsgin "github.com/velonetics/velonetics-websocket/v2/router/gin"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	router "github.com/velonetics/lura/v2/router/gin"
-	"github.com/velonetics/lura/v2/transport/http/server"
+	botdetector "github.com/pucora/velonetics-botdetector/v2/gin"
+	jose "github.com/pucora/velonetics-jose/v2"
+	ginjose "github.com/pucora/velonetics-jose/v2/gin"
+	lua "github.com/pucora/velonetics-lua/v2/router/gin"
+	metrics "github.com/pucora/velonetics-metrics/v2/gin"
+	opencensus "github.com/pucora/velonetics-opencensus/v2/router/gin"
+	ratelimit "github.com/pucora/velonetics-ratelimit/v3/router/gin"
+	wsgin "github.com/pucora/velonetics-websocket/v2/router/gin"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	router "github.com/pucora/lura/v2/router/gin"
+	"github.com/pucora/lura/v2/transport/http/server"
 
 	"github.com/gin-gonic/gin"
 )

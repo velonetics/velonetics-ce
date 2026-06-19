@@ -10,7 +10,7 @@
     "header": {
       "content-type": ["text/event-stream"],
       "Cache-Control": ["no-cache"],
-      "X-Velonetics-Completed": ["false"]
+      "X-Pucora-Completed": ["false"]
     }
   }
 }

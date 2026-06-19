@@ -20,7 +20,7 @@ topologySpreadConstraints:
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
-        app.kubernetes.io/name: velonetics
+        app.kubernetes.io/name: pucora
 
 networkPolicy:
   enabled: true

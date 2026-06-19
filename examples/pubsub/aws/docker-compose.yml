@@ -30,7 +30,7 @@ services:
         aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name events
         echo "LocalStack SQS queue created"
 
-  velonetics:
+  pucora:
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -44,8 +44,8 @@ services:
       AWS_DEFAULT_REGION: us-east-1
       AWS_ENDPOINT_URL: http://localstack:4566
     volumes:
-      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+      - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       localstack-init:
         condition: service_completed_successfully
-    command: ["run", "-c", "/etc/velonetics/velonetics.json"]
+    command: ["run", "-c", "/etc/pucora/pucora.json"]

@@ -2,10 +2,10 @@
 
 ## Module published
 
-- Repository: https://github.com/velonetics/velonetics-websocket
+- Repository: https://github.com/pucora/velonetics-websocket
 - Tags: `v2.0.0`, `v2.0.1`
-- Go module: `github.com/velonetics/velonetics-websocket/v2`
-- Router support: https://github.com/velonetics/lura `v2.0.1` (GET + NoopProxy for WS endpoints)
+- Go module: `github.com/pucora/velonetics-websocket/v2`
+- Router support: https://github.com/pucora/lura `v2.0.1` (GET + NoopProxy for WS endpoints)
 
 ## CE integration
 

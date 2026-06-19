@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Install the Velonetics Helm chart on a Kind cluster and verify health.
+# Install the Pucora Helm chart on a Kind cluster and verify health.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-CHART_DIR="${ROOT_DIR}/deploy/helm/velonetics"
+CHART_DIR="${ROOT_DIR}/deploy/helm/pucora"
 RELEASE_NAME="${RELEASE_NAME:-velonetics-ci}"
 NAMESPACE="${NAMESPACE:-default}"
 CLUSTER_NAME="${CLUSTER_NAME:-velonetics-helm-test}"

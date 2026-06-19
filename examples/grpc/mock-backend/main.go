@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	flightfinder "github.com/velonetics/velonetics-grpc-mock/flight_finder"
+	flightfinder "github.com/pucora/velonetics-grpc-mock/flight_finder"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

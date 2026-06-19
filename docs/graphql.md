@@ -1,6 +1,6 @@
 # GraphQL Backend Integration
 
-Velonetics integrates with GraphQL servers in three modes, matching [KrakenD GraphQL](https://www.krakend.io/docs/backends/graphql/) behavior.
+Pucora integrates with GraphQL servers in three modes, matching [KrakenD GraphQL](https://www.krakend.io/docs/backends/graphql/) behavior.
 
 ## Namespace
 
@@ -12,7 +12,7 @@ Velonetics integrates with GraphQL servers in three modes, matching [KrakenD Gra
 
 ## Mode 1: REST to GraphQL adapter
 
-Clients call REST endpoints; Velonetics builds and sends GraphQL queries or mutations to the upstream server.
+Clients call REST endpoints; Pucora builds and sends GraphQL queries or mutations to the upstream server.
 
 ```json
 {
@@ -135,4 +135,4 @@ See [examples/graphql/README.md](../examples/graphql/README.md).
 
 ## Implementation
 
-Runtime lives in `github.com/velonetics/lura/v2/transport/http/client/graphql` and `proxy.NewGraphQLMiddleware`. No separate Velonetics module is required.
+Runtime lives in `github.com/pucora/lura/v2/transport/http/client/graphql` and `proxy.NewGraphQLMiddleware`. No separate Pucora module is required.

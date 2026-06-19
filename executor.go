@@ -1,4 +1,4 @@
-package velonetics
+package pucora
 
 import (
 	"context"
@@ -12,45 +12,45 @@ import (
 	"github.com/go-contrib/uuid"
 	"golang.org/x/sync/errgroup"
 
-	veloneticsbf "github.com/velonetics/bloomfilter/v2/velonetics"
-	asyncamqp "github.com/velonetics/velonetics-amqp/v2/async"
-	asynckafka "github.com/velonetics/velonetics-pubsub/v2/async"
-	kafkapkg "github.com/velonetics/velonetics-pubsub/v2/kafka"
-	audit "github.com/velonetics/velonetics-audit"
-	cel "github.com/velonetics/velonetics-cel/v2"
-	cmd "github.com/velonetics/velonetics-cobra/v2"
-	cors "github.com/velonetics/velonetics-cors/v2/gin"
-	gelf "github.com/velonetics/velonetics-gelf/v2"
-	gologging "github.com/velonetics/velonetics-gologging/v2"
-	influxdb "github.com/velonetics/velonetics-influx/v2"
-	jose "github.com/velonetics/velonetics-jose/v2"
-	logstash "github.com/velonetics/velonetics-logstash/v2"
-	metrics "github.com/velonetics/velonetics-metrics/v2/gin"
-	opencensus "github.com/velonetics/velonetics-opencensus/v2"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/datadog"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/influxdb"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/jaeger"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/ocagent"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/prometheus"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/stackdriver"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/xray"
-	_ "github.com/velonetics/velonetics-opencensus/v2/exporter/zipkin"
-	kotel "github.com/velonetics/velonetics-otel"
-	otellura "github.com/velonetics/velonetics-otel/lura"
-	otelgin "github.com/velonetics/velonetics-otel/router/gin"
-	usage "github.com/velonetics/velonetics-usage/v2"
-	soap "github.com/velonetics/velonetics-soap/v2"
-	maingrpc "github.com/velonetics/velonetics-grpc/v2"
-	grpcserver "github.com/velonetics/velonetics-grpc/v2/server"
-	"github.com/velonetics/lura/v2/async"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/core"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	router "github.com/velonetics/lura/v2/router/gin"
-	"github.com/velonetics/lura/v2/sd/dnssrv"
-	serverhttp "github.com/velonetics/lura/v2/transport/http/server"
-	server "github.com/velonetics/lura/v2/transport/http/server/plugin"
+	veloneticsbf "github.com/pucora/bloomfilter/v2/pucora"
+	asyncamqp "github.com/pucora/velonetics-amqp/v2/async"
+	asynckafka "github.com/pucora/velonetics-pubsub/v2/async"
+	kafkapkg "github.com/pucora/velonetics-pubsub/v2/kafka"
+	audit "github.com/pucora/velonetics-audit"
+	cel "github.com/pucora/velonetics-cel/v2"
+	cmd "github.com/pucora/velonetics-cobra/v2"
+	cors "github.com/pucora/velonetics-cors/v2/gin"
+	gelf "github.com/pucora/velonetics-gelf/v2"
+	gologging "github.com/pucora/velonetics-gologging/v2"
+	influxdb "github.com/pucora/velonetics-influx/v2"
+	jose "github.com/pucora/velonetics-jose/v2"
+	logstash "github.com/pucora/velonetics-logstash/v2"
+	metrics "github.com/pucora/velonetics-metrics/v2/gin"
+	opencensus "github.com/pucora/velonetics-opencensus/v2"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/datadog"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/influxdb"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/jaeger"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/ocagent"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/prometheus"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/stackdriver"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/xray"
+	_ "github.com/pucora/velonetics-opencensus/v2/exporter/zipkin"
+	kotel "github.com/pucora/velonetics-otel"
+	otellura "github.com/pucora/velonetics-otel/lura"
+	otelgin "github.com/pucora/velonetics-otel/router/gin"
+	usage "github.com/pucora/velonetics-usage/v2"
+	soap "github.com/pucora/velonetics-soap/v2"
+	maingrpc "github.com/pucora/velonetics-grpc/v2"
+	grpcserver "github.com/pucora/velonetics-grpc/v2/server"
+	"github.com/pucora/lura/v2/async"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/core"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	router "github.com/pucora/lura/v2/router/gin"
+	"github.com/pucora/lura/v2/sd/dnssrv"
+	serverhttp "github.com/pucora/lura/v2/transport/http/server"
+	server "github.com/pucora/lura/v2/transport/http/server/plugin"
 )
 
 // NewExecutor returns an executor for the cmd package. The executor initalizes the entire gateway by
@@ -91,32 +91,32 @@ type MetricsAndTracesRegister interface {
 	Register(context.Context, config.ServiceConfig, logging.Logger) *metrics.Metrics
 }
 
-// EngineFactory returns a gin engine, ready to be passed to the Velonetics RouterFactory
+// EngineFactory returns a gin engine, ready to be passed to the Pucora RouterFactory
 type EngineFactory interface {
 	NewEngine(config.ServiceConfig, router.EngineOptions) *gin.Engine
 }
 
-// ProxyFactory returns a Velonetics proxy factory, ready to be passed to the Velonetics RouterFactory
+// ProxyFactory returns a Pucora proxy factory, ready to be passed to the Pucora RouterFactory
 type ProxyFactory interface {
 	NewProxyFactory(logging.Logger, proxy.BackendFactory, *metrics.Metrics) proxy.Factory
 }
 
-// BackendFactory returns a Velonetics backend factory, ready to be passed to the Velonetics proxy factory
+// BackendFactory returns a Pucora backend factory, ready to be passed to the Pucora proxy factory
 type BackendFactory interface {
 	NewBackendFactory(context.Context, logging.Logger, *metrics.Metrics) proxy.BackendFactory
 }
 
-// HandlerFactory returns a Velonetics router handler factory, ready to be passed to the Velonetics RouterFactory
+// HandlerFactory returns a Pucora router handler factory, ready to be passed to the Pucora RouterFactory
 type HandlerFactory interface {
 	NewHandlerFactory(logging.Logger, *metrics.Metrics, jose.RejecterFactory) router.HandlerFactory
 }
 
-// LoggerFactory returns a Velonetics Logger factory, ready to be passed to the Velonetics RouterFactory
+// LoggerFactory returns a Pucora Logger factory, ready to be passed to the Pucora RouterFactory
 type LoggerFactory interface {
 	NewLogger(config.ServiceConfig) (logging.Logger, io.Writer, error)
 }
 
-// RunServer defines the interface of a function used by the Velonetics router to start the service
+// RunServer defines the interface of a function used by the Pucora router to start the service
 type RunServer func(context.Context, config.ServiceConfig, http.Handler) error
 
 // RunServerFactory returns a RunServer with several wraps around the injected one
@@ -180,7 +180,7 @@ func (e *ExecutorBuilder) NewCmdExecutor(ctx context.Context) cmd.Executor {
 			return
 		}
 
-		logger.Info(fmt.Sprintf("Starting Velonetics v%s", core.VeloneticsVersion))
+		logger.Info(fmt.Sprintf("Starting Pucora v%s", core.PucoraVersion))
 		startReporter(ctx, logger, cfg)
 
 		if wd, err := os.Getwd(); err == nil {
@@ -238,7 +238,7 @@ func (e *ExecutorBuilder) NewCmdExecutor(ctx context.Context) cmd.Executor {
 		runServerChain = grpcserver.RunServer(logger, grpcRegistry, grpcSvcCfg, pf, tokenRejecterFactory, runServerChain)
 		runServerChain = router.RunServerFunc(e.RunServerFactory.NewRunServer(logger, runServerChain))
 
-		// setup the velonetics router
+		// setup the pucora router
 		routerFactory := router.NewFactory(router.Config{
 			Engine: e.EngineFactory.NewEngine(cfg, router.EngineOptions{
 				Logger: logger,
@@ -253,7 +253,7 @@ func (e *ExecutorBuilder) NewCmdExecutor(ctx context.Context) cmd.Executor {
 		})
 
 		// start the engines
-		logger.Info("Starting the Velonetics instance")
+		logger.Info("Starting the Pucora instance")
 
 		if len(cfg.AsyncAgents) == 0 {
 			routerFactory.NewWithContext(ctx).Run(cfg)
@@ -496,8 +496,8 @@ func startReporter(ctx context.Context, logger logging.Logger, cfg config.Servic
 			usage.Options{
 				ClusterID:    clusterID,
 				ServerID:     serverID,
-				Version:      core.VeloneticsVersion,
-				UserAgent:    core.VeloneticsUserAgent,
+				Version:      core.PucoraVersion,
+				UserAgent:    core.PucoraUserAgent,
 				ExtraPayload: a,
 				Client:       &http.Client{Transport: serverhttp.NewTransport(cfg, logger)},
 			},

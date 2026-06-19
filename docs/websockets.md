@@ -1,8 +1,8 @@
 # WebSockets
 
-Velonetics supports bidirectional communication using the [WebSocket protocol (RFC-6455)](https://datatracker.ietf.org/doc/html/rfc6455). Clients connect to the gateway over WebSocket; the gateway connects to one or more backend hosts using `ws://` or `wss://`.
+Pucora supports bidirectional communication using the [WebSocket protocol (RFC-6455)](https://datatracker.ietf.org/doc/html/rfc6455). Clients connect to the gateway over WebSocket; the gateway connects to one or more backend hosts using `ws://` or `wss://`.
 
-This feature is implemented by the [`velonetics-websocket`](https://github.com/velonetics/velonetics-websocket) module and is configured per endpoint via `extra_config.websocket`.
+This feature is implemented by the [`velonetics-websocket`](https://github.com/pucora/velonetics-websocket) module and is configured per endpoint via `extra_config.websocket`.
 
 ## Operating modes
 
@@ -21,7 +21,7 @@ Multiplexing is recommended when many clients talk to the same backend service. 
 # any WebSocket echo server listening on ws://127.0.0.1:8081/
 ```
 
-**2. Gateway config** (`velonetics.json`):
+**2. Gateway config** (`pucora.json`):
 
 ```json
 {
@@ -54,7 +54,7 @@ Multiplexing is recommended when many clients talk to the same backend service. 
 
 ```bash
 make build
-./velonetics run -c velonetics.json
+./pucora run -c pucora.json
 
 # In another terminal (requires websocat or similar):
 websocat ws://localhost:8080/ws/echo
@@ -108,7 +108,7 @@ Durations use Go syntax: `500ms`, `10s`, `5m`, `1h`.
 
 ```
  Client A ──WS──┐
- Client B ──WS──┼── Velonetics Gateway ── single WS ── Backend
+ Client B ──WS──┼── Pucora Gateway ── single WS ── Backend
  Client C ──WS──┘
 ```
 
@@ -119,7 +119,7 @@ Many clients share one backend WebSocket. The gateway wraps traffic in a JSON **
 When the gateway opens the backend connection it sends:
 
 ```json
-{"msg":"Velonetics WS proxy starting"}
+{"msg":"Pucora WS proxy starting"}
 ```
 
 The backend **must** reply with the plain text string:
@@ -195,7 +195,7 @@ Invalid JSON or unknown shape from the backend is **broadcast** as raw bytes to 
 conn, _ := websocket.Accept(w, r, nil)
 // 1. Handshake
 _, msg, _ := conn.Read(ctx)
-// expect: {"msg":"Velonetics WS proxy starting"}
+// expect: {"msg":"Pucora WS proxy starting"}
 conn.Write(ctx, websocket.MessageText, []byte("OK"))
 
 // 2. Read envelopes from gateway
@@ -276,10 +276,10 @@ Unless `disable_otel_metrics` is set:
 
 | Metric | Description |
 |--------|-------------|
-| `velonetics.websocket.connections` | Active client connections |
-| `velonetics.websocket.messages.in` | Messages from clients |
-| `velonetics.websocket.messages.out` | Messages to clients |
-| `velonetics.websocket.reconnects` | Backend reconnect attempts |
+| `pucora.websocket.connections` | Active client connections |
+| `pucora.websocket.messages.in` | Messages from clients |
+| `pucora.websocket.messages.out` | Messages to clients |
+| `pucora.websocket.reconnects` | Backend reconnect attempts |
 
 ## What is not supported
 
@@ -302,7 +302,7 @@ Or from the repository root (with `go.work` at the workspace parent, see `script
 make test-websocket
 ```
 
-Sample configs (validate with `./velonetics check -c …`):
+Sample configs (validate with `./pucora check -c …`):
 
 | Fixture | Description |
 |---------|-------------|
@@ -317,7 +317,7 @@ make check-fixtures
 Validate config:
 
 ```bash
-./velonetics check -c your-config.json
+./pucora check -c your-config.json
 ```
 
 ## Docker
@@ -339,8 +339,8 @@ See [examples/websocket/README.md](../examples/websocket/README.md).
 ```bash
 make docker
 docker run -p 8080:8080 \
-  -v $(pwd)/velonetics-ws.json:/etc/velonetics/velonetics.json \
-  niteesh20/velonetics:2.0.0 run -c /etc/velonetics/velonetics.json
+  -v $(pwd)/velonetics-ws.json:/etc/pucora/pucora.json \
+  niteesh20/pucora:2.0.0 run -c /etc/pucora/pucora.json
 ```
 
 Ensure the container can reach backend `ws://` hosts (use host networking or service names in Docker Compose).
@@ -349,10 +349,10 @@ Ensure the container can reach backend `ws://` hosts (use host networking or ser
 
 | Path | Purpose |
 |------|---------|
-| [`velonetics-websocket`](https://github.com/velonetics/velonetics-websocket) | Implementation module (`../velonetics-websocket` in workspace) |
-| [`velonetics-schema` v2.13 websocket.json](https://github.com/velonetics/velonetics-schema/blob/v2.0.2/v2.13/websocket.json) | JSON Schema |
+| [`velonetics-websocket`](https://github.com/pucora/velonetics-websocket) | Implementation module (`../velonetics-websocket` in workspace) |
+| [`velonetics-schema` v2.13 websocket.json](https://github.com/pucora/velonetics-schema/blob/v2.0.2/v2.13/websocket.json) | JSON Schema |
 | [`handler_factory.go`](../handler_factory.go) | Gateway wiring (WebSocket → JWT handler chain) |
-| [`lura` router/gin/router.go](https://github.com/velonetics/lura/blob/v2.0.1/router/gin/router.go) | GET-only registration for WS endpoints |
+| [`lura` router/gin/router.go](https://github.com/pucora/lura/blob/v2.0.1/router/gin/router.go) | GET-only registration for WS endpoints |
 | [`tests/fixtures/ws_direct.json`](../tests/fixtures/ws_direct.json) | Direct mode sample |
 | [`tests/fixtures/ws_multiplex.json`](../tests/fixtures/ws_multiplex.json) | Multiplex sample |
 | [`tests/fixtures/ws_jwt.json`](../tests/fixtures/ws_jwt.json) | JWT + direct mode sample |

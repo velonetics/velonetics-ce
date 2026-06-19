@@ -1,4 +1,4 @@
-1. Get the Velonetics API Gateway URL:
+1. Get the Pucora API Gateway URL:
 
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
@@ -7,18 +7,18 @@
   {{- end }}
 {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "velonetics.fullname" . }})
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "pucora.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
-{{- else if eq (include "velonetics.isLoadBalancerService" .) "true" }}
+{{- else if eq (include "pucora.isLoadBalancerService" .) "true" }}
   NOTE: It may take a few minutes for the LoadBalancer IP/hostname to be available.
-  kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "velonetics.fullname" . }}
+  kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "pucora.fullname" . }}
 {{- if .Values.service.nlb.enabled }}
 
   NLB mode is enabled. Check cloud-provider tags and metadata via service annotations.
 {{- end }}
 {{- else }}
-  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "velonetics.fullname" . }} 8080:{{ .Values.service.port }}
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "pucora.fullname" . }} 8080:{{ .Values.service.port }}
   echo "Visit http://127.0.0.1:8080"
 {{- end }}
 
@@ -48,10 +48,10 @@ Sidecar injection is enabled.
 
 Configuration mode: {{ .Values.config.mode }}
 {{- if eq .Values.config.mode "configmap" }}
-   Update config.veloneticsJson in values.yaml or use --set-file config.veloneticsJson=./velonetics.json
+   Update config.veloneticsJson in values.yaml or use --set-file config.veloneticsJson=./pucora.json
 {{- else }}
    Configuration is expected to be baked into the container image.
 {{- end }}
 
-Source repository: https://github.com/velonetics/velonetics-ce
-Chart: https://github.com/velonetics/velonetics-ce/tree/main/deploy/helm/velonetics
+Source repository: https://github.com/pucora/velonetics-ce
+Chart: https://github.com/pucora/velonetics-ce/tree/main/deploy/helm/pucora

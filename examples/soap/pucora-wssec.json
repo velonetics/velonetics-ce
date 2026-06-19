@@ -1,7 +1,7 @@
 {
-  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "$schema": "https://pucora.io/schema/v2.13/pucora.json",
   "version": 3,
-  "name": "Velonetics SOAP WS-Security example",
+  "name": "Pucora SOAP WS-Security example",
   "port": 8080,
   "endpoints": [
     {
@@ -15,7 +15,7 @@
           "encoding": "xml",
           "extra_config": {
             "backend/soap": {
-              "path": "/etc/velonetics/soap_flag_request.xml",
+              "path": "/etc/pucora/soap_flag_request.xml",
               "soap_action": "http://www.example.com/CountryFlag",
               "ws_security": {
                 "username_token": {

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/encoding"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/encoding"
 )
 
 func TestStreamingConfigRejectedAtStartup(t *testing.T) {
@@ -22,7 +22,7 @@ func TestStreamingConfigRejectedAtStartup(t *testing.T) {
 			name: "lua post on streaming endpoint",
 			mutate: func(s *config.ServiceConfig) {
 				s.Endpoints[0].ExtraConfig = config.ExtraConfig{
-					"github.com/velonetics/velonetics-lua/router": map[string]interface{}{
+					"github.com/pucora/velonetics-lua/router": map[string]interface{}{
 						"post": "local r = response.load()",
 					},
 				}
@@ -33,7 +33,7 @@ func TestStreamingConfigRejectedAtStartup(t *testing.T) {
 			name: "backend httpcache on streaming endpoint",
 			mutate: func(s *config.ServiceConfig) {
 				s.Endpoints[0].Backend[0].ExtraConfig = config.ExtraConfig{
-					"github.com/velonetics/velonetics-httpcache": map[string]interface{}{"shared": true},
+					"github.com/pucora/velonetics-httpcache": map[string]interface{}{"shared": true},
 				}
 			},
 			wantErr: config.ErrStreamingBackendHTTPCache,
@@ -60,9 +60,9 @@ func TestStreamingConfigRejectedAtStartup(t *testing.T) {
 }
 
 func TestStreamingConfigRejectedByCheckCommand(t *testing.T) {
-	bin := "../velonetics"
+	bin := "../pucora"
 	if _, err := os.Stat(bin); err != nil {
-		t.Skip("velonetics binary not built; run make build first")
+		t.Skip("pucora binary not built; run make build first")
 	}
 
 	cfgPath := filepath.Join(t.TempDir(), "invalid-streaming.json")

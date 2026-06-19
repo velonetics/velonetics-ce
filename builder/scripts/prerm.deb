@@ -2,6 +2,6 @@
 
 set -e
 
-if [ -x "/etc/init.d/velonetics" ] || [ -e "/etc/init/velonetics.conf" ]; then
-	invoke-rc.d velonetics stop || exit $?
+if [ -x "/etc/init.d/pucora" ] || [ -e "/etc/init/pucora.conf" ]; then
+	invoke-rc.d pucora stop || exit $?
 fi

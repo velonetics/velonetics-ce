@@ -3,7 +3,7 @@
 set -euo pipefail
 
 VERSION="${1:-}"
-CHART_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../velonetics" && pwd)"
+CHART_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../pucora" && pwd)"
 CHART_YAML="${CHART_DIR}/Chart.yaml"
 VALUES_YAML="${CHART_DIR}/values.yaml"
 

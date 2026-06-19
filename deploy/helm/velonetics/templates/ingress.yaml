@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "velonetics.fullname" . }}
+  name: {{ include "pucora.fullname" . }}
   labels:
-    {{- include "velonetics.labels" . | nindent 4 }}
+    {{- include "pucora.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -27,7 +27,7 @@ spec:
     {{- range .Values.ingress.hosts }}
     - hosts:
         - {{ .host | quote }}
-      secretName: {{ include "velonetics.certificateSecretName" $ }}
+      secretName: {{ include "pucora.certificateSecretName" $ }}
     {{- end }}
     {{- end }}
   {{- end }}
@@ -41,7 +41,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "velonetics.fullname" $ }}
+                name: {{ include "pucora.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

@@ -1,11 +1,11 @@
 # WebSocket local stack (Docker Compose)
 
-Runs Velonetics CE with a mock backend that provides:
+Runs Pucora CE with a mock backend that provides:
 
 - **HTTP** `GET /jwk/symmetric` — HS256 JWK for JWT validation
 - **HTTP** `GET /token` — sample bearer token for smoke tests
 - **WebSocket** `/echo` — direct echo (used by `/ws/echo` and `/ws/secure`)
-- **WebSocket** `/ws` — multiplex backend with Velonetics handshake + envelope replies
+- **WebSocket** `/ws` — multiplex backend with Pucora handshake + envelope replies
 
 ## Quick start
 
@@ -67,7 +67,7 @@ websocat -H="Authorization: Bearer $TOKEN" ws://127.0.0.1:8080/ws/secure
 | File | Purpose |
 |------|---------|
 | `docker-compose.yml` | Gateway + mock backend |
-| `velonetics.json` | Gateway config (service DNS names) |
+| `pucora.json` | Gateway config (service DNS names) |
 | `mock-backend/` | Echo + multiplex + JWK server |
 | `smoke/` | Tiny Go WebSocket client for CI/local checks |
 | `scripts/smoke.sh` | End-to-end smoke script |

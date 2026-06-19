@@ -4,7 +4,7 @@ services:
     ports:
       - "4222:4222"
 
-  velonetics:
+  pucora:
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -15,7 +15,7 @@ services:
     environment:
       NATS_SERVER_URL: nats://nats:4222
     volumes:
-      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+      - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       - nats
-    command: ["run", "-c", "/etc/velonetics/velonetics.json"]
+    command: ["run", "-c", "/etc/pucora/pucora.json"]

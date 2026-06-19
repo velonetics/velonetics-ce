@@ -16,33 +16,33 @@ RUN set -eux; \
     if [ -d vendor ]; then \
       CGO_ENABLED=0 GOPROXY=off go build -mod=vendor \
         -ldflags="-s -w \
-          -X github.com/velonetics/velonetics-ce/v2/pkg.Version=${VERSION} \
-          -X github.com/velonetics/lura/v2/core.VeloneticsVersion=${VERSION}" \
-        -o velonetics ./cmd/velonetics-ce; \
+          -X github.com/pucora/velonetics-ce/v2/pkg.Version=${VERSION} \
+          -X github.com/pucora/lura/v2/core.PucoraVersion=${VERSION}" \
+        -o pucora ./cmd/velonetics-ce; \
     else \
       CGO_ENABLED=0 go build \
         -ldflags="-s -w \
-          -X github.com/velonetics/velonetics-ce/v2/pkg.Version=${VERSION} \
-          -X github.com/velonetics/lura/v2/core.VeloneticsVersion=${VERSION}" \
-        -o velonetics ./cmd/velonetics-ce; \
+          -X github.com/pucora/velonetics-ce/v2/pkg.Version=${VERSION} \
+          -X github.com/pucora/lura/v2/core.PucoraVersion=${VERSION}" \
+        -o pucora ./cmd/velonetics-ce; \
     fi
 
 FROM alpine:${ALPINE_VERSION}
 
-LABEL maintainer="community@velonetics.io"
+LABEL maintainer="community@pucora.io"
 
 # CA bundle from builder — avoids apk in runtime (fixes TLS issues on some Docker hosts).
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder /app/velonetics /usr/bin/velonetics
+COPY --from=builder /app/pucora /usr/bin/pucora
 
-RUN mkdir -p /etc/velonetics \
-    && echo '{"version":3}' > /etc/velonetics/velonetics.json
+RUN mkdir -p /etc/pucora \
+    && echo '{"version":3}' > /etc/pucora/pucora.json
 
 USER 1000:1000
 
-WORKDIR /etc/velonetics
+WORKDIR /etc/pucora
 
-ENTRYPOINT ["/usr/bin/velonetics"]
-CMD ["run", "-c", "/etc/velonetics/velonetics.json"]
+ENTRYPOINT ["/usr/bin/pucora"]
+CMD ["run", "-c", "/etc/pucora/pucora.json"]
 
 EXPOSE 8080 8090

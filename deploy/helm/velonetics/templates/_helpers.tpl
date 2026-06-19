@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "velonetics.name" -}}
+{{- define "pucora.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "velonetics.fullname" -}}
+{{- define "pucora.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -24,16 +24,16 @@ Create a default fully qualified app name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "velonetics.chart" -}}
+{{- define "pucora.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "velonetics.labels" -}}
-helm.sh/chart: {{ include "velonetics.chart" . }}
-{{ include "velonetics.selectorLabels" . }}
+{{- define "pucora.labels" -}}
+helm.sh/chart: {{ include "pucora.chart" . }}
+{{ include "pucora.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -43,48 +43,48 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "velonetics.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "velonetics.name" . }}
+{{- define "pucora.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "pucora.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "velonetics.serviceAccountName" -}}
+{{- define "pucora.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "velonetics.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "pucora.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
 {{/*
-ConfigMap name for velonetics.json
+ConfigMap name for pucora.json
 */}}
-{{- define "velonetics.configMapName" -}}
+{{- define "pucora.configMapName" -}}
 {{- if .Values.config.existingConfigMap }}
 {{- .Values.config.existingConfigMap }}
 {{- else }}
-{{- include "velonetics.fullname" . }}
+{{- include "pucora.fullname" . }}
 {{- end }}
 {{- end }}
 
 {{/*
-Secret name for velonetics.json
+Secret name for pucora.json
 */}}
-{{- define "velonetics.configSecretName" -}}
+{{- define "pucora.configSecretName" -}}
 {{- if .Values.config.existingSecret }}
 {{- .Values.config.existingSecret }}
 {{- else }}
-{{- include "velonetics.fullname" . }}
+{{- include "pucora.fullname" . }}
 {{- end }}
 {{- end }}
 
 {{/*
 Whether configuration is mounted from a ConfigMap.
 */}}
-{{- define "velonetics.useConfigMap" -}}
+{{- define "pucora.useConfigMap" -}}
 {{- if and (eq .Values.config.mode "configmap") (or .Values.config.existingConfigMap .Values.config.veloneticsJson) }}
 true
 {{- else }}
@@ -95,7 +95,7 @@ false
 {{/*
 Whether configuration is mounted from a Secret.
 */}}
-{{- define "velonetics.useConfigSecret" -}}
+{{- define "pucora.useConfigSecret" -}}
 {{- if and (eq .Values.config.mode "secret") (or .Values.config.existingSecret .Values.config.veloneticsJson) }}
 true
 {{- else }}
@@ -106,8 +106,8 @@ false
 {{/*
 Whether configuration is mounted from ConfigMap or Secret.
 */}}
-{{- define "velonetics.useConfigVolume" -}}
-{{- if or (eq (include "velonetics.useConfigMap" .) "true") (eq (include "velonetics.useConfigSecret" .) "true") }}
+{{- define "pucora.useConfigVolume" -}}
+{{- if or (eq (include "pucora.useConfigMap" .) "true") (eq (include "pucora.useConfigSecret" .) "true") }}
 true
 {{- else }}
 false
@@ -117,7 +117,7 @@ false
 {{/*
 Chart-managed config (not external ConfigMap/Secret).
 */}}
-{{- define "velonetics.chartManagedConfig" -}}
+{{- define "pucora.chartManagedConfig" -}}
 {{- if and (or (eq .Values.config.mode "configmap") (eq .Values.config.mode "secret")) (not .Values.config.existingConfigMap) (not .Values.config.existingSecret) }}
 true
 {{- else }}
@@ -128,14 +128,14 @@ false
 {{/*
 Metrics service name
 */}}
-{{- define "velonetics.metricsServiceName" -}}
-{{- printf "%s-metrics" (include "velonetics.fullname" .) }}
+{{- define "pucora.metricsServiceName" -}}
+{{- printf "%s-metrics" (include "pucora.fullname" .) }}
 {{- end }}
 
 {{/*
 Service type (NLB mode forces LoadBalancer).
 */}}
-{{- define "velonetics.serviceType" -}}
+{{- define "pucora.serviceType" -}}
 {{- if .Values.service.nlb.enabled -}}
 LoadBalancer
 {{- else -}}
@@ -146,7 +146,7 @@ LoadBalancer
 {{/*
 Whether the main Service is a LoadBalancer (NLB or explicit type).
 */}}
-{{- define "velonetics.isLoadBalancerService" -}}
+{{- define "pucora.isLoadBalancerService" -}}
 {{- if or .Values.service.nlb.enabled (eq .Values.service.type "LoadBalancer") -}}
 true
 {{- else -}}
@@ -157,7 +157,7 @@ false
 {{/*
 Merged Service annotations (base + NLB-specific).
 */}}
-{{- define "velonetics.serviceAnnotations" -}}
+{{- define "pucora.serviceAnnotations" -}}
 {{- $annotations := .Values.service.annotations | deepCopy -}}
 {{- if .Values.service.nlb.enabled -}}
 {{- $annotations = merge $annotations (.Values.service.nlb.annotations | default dict) -}}
@@ -170,7 +170,7 @@ Merged Service annotations (base + NLB-specific).
 {{/*
 Sidecar injection annotations for the pod template.
 */}}
-{{- define "velonetics.sidecarInjectionAnnotations" -}}
+{{- define "pucora.sidecarInjectionAnnotations" -}}
 {{- if .Values.sidecarInjection.enabled -}}
 {{- if .Values.sidecarInjection.istio.enabled -}}
 sidecar.istio.io/inject: {{ .Values.sidecarInjection.istio.inject | ternary "true" "false" | quote }}
@@ -190,7 +190,7 @@ linkerd.io/inject: {{ .Values.sidecarInjection.linkerd.inject | quote }}
 {{/*
 GitOps annotations for resources.
 */}}
-{{- define "velonetics.gitopsAnnotations" -}}
+{{- define "pucora.gitopsAnnotations" -}}
 {{- if .Values.gitops.argocd.enabled }}
 {{- if .Values.gitops.argocd.syncWave }}
 argocd.argoproj.io/sync-wave: {{ .Values.gitops.argocd.syncWave | quote }}
@@ -206,10 +206,10 @@ reconcile.fluxcd.io/requestedAt: {{ .Values.gitops.flux.reconcile | quote }}
 {{/*
 Certificate secret name for Ingress TLS.
 */}}
-{{- define "velonetics.certificateSecretName" -}}
+{{- define "pucora.certificateSecretName" -}}
 {{- if .Values.certificate.secretName }}
 {{- .Values.certificate.secretName }}
 {{- else }}
-{{- printf "%s-tls" (include "velonetics.fullname" .) }}
+{{- printf "%s-tls" (include "pucora.fullname" .) }}
 {{- end }}
 {{- end }}

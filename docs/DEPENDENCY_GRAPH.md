@@ -2,7 +2,7 @@
 
 ## What is it?
 
-GitHub can scan your `go.mod` and build a list of every library Velonetics depends on. That list is called the **dependency graph**.
+GitHub can scan your `go.mod` and build a list of every library Pucora depends on. That list is called the **dependency graph**.
 
 The **Dependency Review** workflow (runs on pull requests) compares that list against known security advisories. If a PR adds a vulnerable package, GitHub can warn you in the PR.
 
@@ -14,18 +14,18 @@ Right now that workflow is set to `continue-on-error: true`, which means: *if it
 
 If you want PR dependency warnings later:
 
-1. Go to [velonetics-ce → Settings → Code security and analysis](https://github.com/velonetics/velonetics-ce/settings/security_analysis).
+1. Go to [velonetics-ce → Settings → Code security and analysis](https://github.com/pucora/velonetics-ce/settings/security_analysis).
 2. Turn **Dependency graph** to **Enabled**.
 3. Wait until GitHub has indexed `go.mod` (usually after the next push to `main`).
 4. Open `.github/workflows/dependency_review.yml` and delete the line `continue-on-error: true` so failed reviews block merges.
 
-> The velonetics org does not allow CI to submit the graph automatically (`dependency-graph: write` is blocked). An admin must flip the setting in the GitHub UI.
+> The pucora org does not allow CI to submit the graph automatically (`dependency-graph: write` is blocked). An admin must flip the setting in the GitHub UI.
 
 ## Docker Hub (niteesh20)
 
-Images are published to **[niteesh20/velonetics](https://hub.docker.com/r/niteesh20/velonetics)**.
+Images are published to **[niteesh20/pucora](https://hub.docker.com/r/niteesh20/pucora)**.
 
-Add these secrets under [velonetics-ce → Settings → Secrets → Actions](https://github.com/velonetics/velonetics-ce/settings/secrets/actions):
+Add these secrets under [velonetics-ce → Settings → Secrets → Actions](https://github.com/pucora/velonetics-ce/settings/secrets/actions):
 
 | Secret | Value |
 |--------|-------|
@@ -34,6 +34,6 @@ Add these secrets under [velonetics-ce → Settings → Secrets → Actions](htt
 
 Create a token at [Docker Hub → Account Settings → Security](https://hub.docker.com/settings/security).
 
-On each GitHub release, the **Handle Release** workflow builds and pushes `niteesh20/velonetics:$TAG`.
+On each GitHub release, the **Handle Release** workflow builds and pushes `niteesh20/pucora:$TAG`.
 
 Optional secrets for signed `.deb`/`.rpm` packages: `PGP_SIGNING_KEY`, `PGP_PASSPHRASE`.

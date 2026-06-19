@@ -1,7 +1,7 @@
 {
-  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "$schema": "https://pucora.io/schema/v2.13/pucora.json",
   "version": 3,
-  "name": "Velonetics SOAP WSDL example",
+  "name": "Pucora SOAP example",
   "port": 8080,
   "endpoints": [
     {
@@ -15,15 +15,13 @@
           "encoding": "xml",
           "extra_config": {
             "backend/soap": {
-              "path": "/etc/velonetics/soap_flag_request.xml",
-              "wsdl": {
-                "path": "/etc/velonetics/country.wsdl",
-                "operation": "CountryFlag"
-              }
+              "path": "/etc/pucora/soap_flag_request.xml"
             }
           },
           "target": "Envelope.Body.CountryFlagResponse",
-          "mapping": { "CountryFlagResult": "flag_url" },
+          "mapping": {
+            "CountryFlagResult": "flag_url"
+          },
           "deny": ["-m"]
         }
       ]

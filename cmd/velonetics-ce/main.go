@@ -1,4 +1,4 @@
-// Velonetics-ce sets up a complete Velonetics API Gateway ready to serve
+// Pucora-ce sets up a complete Pucora API Gateway ready to serve
 
 package main
 
@@ -8,13 +8,14 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
-	velonetics "github.com/velonetics/velonetics-ce/v2"
-	cmd "github.com/velonetics/velonetics-cobra/v2"
-	flexibleconfig "github.com/velonetics/velonetics-flexibleconfig/v2"
-	koanf "github.com/velonetics/velonetics-koanf"
-	"github.com/velonetics/lura/v2/config"
+	pucora "github.com/pucora/velonetics-ce/v2"
+	cmd "github.com/pucora/velonetics-cobra/v2"
+	flexibleconfig "github.com/pucora/velonetics-flexibleconfig/v2"
+	koanf "github.com/pucora/velonetics-koanf"
+	"github.com/pucora/lura/v2/config"
 )
 
 const (
@@ -43,11 +44,9 @@ func main() {
 		}
 	}()
 
-	velonetics.RegisterEncoders()
+	pucora.RegisterEncoders()
 
-	for key, alias := range aliases {
-		config.ExtraConfigAlias[alias] = key
-	}
+	registerAliases()
 
 	var cfg config.Parser
 	cfg = koanf.New()
@@ -73,63 +72,77 @@ func main() {
 		cmd.PluginCommand,
 		cmd.VersionCommand,
 		cmd.AuditCommand,
-		velonetics.NewTestPluginCmd(),
+		pucora.NewTestPluginCmd(),
 	}
 
 	cmd.DefaultRoot = cmd.NewRoot(cmd.RootCommand, commandsToLoad...)
 	cmd.DefaultRoot.Cmd.CompletionOptions.DisableDefaultCmd = true
 
-	cmd.Execute(cfg, velonetics.NewExecutor(ctx))
+	cmd.Execute(cfg, pucora.NewExecutor(ctx))
 }
 
 var aliases = map[string]string{
-	"github_com/velonetics/velonetics-ce/v2/transport/http/server/handler":  "plugin/http-server",
-	"github.com/velonetics/velonetics-ce/v2/transport/http/client/executor": "plugin/http-client",
-	"github.com/velonetics/velonetics-ce/v2/proxy/plugin":                   "plugin/req-resp-modifier",
-	"github.com/velonetics/velonetics-ce/v2/proxy":                          "proxy",
-	"github_com/velonetics/lura/v2/router/gin":                              "router",
+	"github_com/pucora/velonetics-ce/v2/transport/http/server/handler":  "plugin/http-server",
+	"github.com/pucora/velonetics-ce/v2/transport/http/client/executor": "plugin/http-client",
+	"github.com/pucora/velonetics-ce/v2/proxy/plugin":                   "plugin/req-resp-modifier",
+	"github.com/pucora/velonetics-ce/v2/proxy":                          "proxy",
+	"github_com/pucora/lura/v2/router/gin":                              "router",
 
-	"github.com/velonetics/velonetics-httpcache":                "qos/http-cache",
-	"github.com/velonetics/velonetics-circuitbreaker/gobreaker": "qos/circuit-breaker",
+	"github.com/pucora/velonetics-httpcache":                "qos/http-cache",
+	"github.com/pucora/velonetics-circuitbreaker/gobreaker": "qos/circuit-breaker",
 
-	"github.com/velonetics/velonetics-oauth2-clientcredentials": "auth/client-credentials",
-	"github.com/velonetics/velonetics-jose/validator":           "auth/validator",
-	"github.com/velonetics/velonetics-jose/signer":              "auth/signer",
+	"github.com/pucora/velonetics-oauth2-clientcredentials": "auth/client-credentials",
+	"github.com/pucora/velonetics-jose/validator":           "auth/validator",
+	"github.com/pucora/velonetics-jose/signer":              "auth/signer",
 	"github_com/devopsfaith/bloomfilter":                        "auth/revoker",
 
-	"github_com/velonetics/velonetics-botdetector": "security/bot-detector",
-	"github_com/velonetics/velonetics-httpsecure":  "security/http",
-	"github_com/velonetics/velonetics-cors":        "security/cors",
+	"github_com/pucora/velonetics-botdetector": "security/bot-detector",
+	"github_com/pucora/velonetics-httpsecure":  "security/http",
+	"github_com/pucora/velonetics-cors":        "security/cors",
 
-	"github.com/velonetics/velonetics-cel":        "validation/cel",
-	"github.com/velonetics/velonetics-jsonschema": "validation/json-schema",
+	"github.com/pucora/velonetics-cel":        "validation/cel",
+	"github.com/pucora/velonetics-jsonschema": "validation/json-schema",
 
-	"github.com/velonetics/velonetics-amqp/agent": "async/amqp",
+	"github.com/pucora/velonetics-amqp/agent": "async/amqp",
 
-	"github.com/velonetics/velonetics-amqp/consume":                  "backend/amqp/consumer",
-	"github.com/velonetics/velonetics-amqp/produce":                  "backend/amqp/producer",
-	"github.com/velonetics/velonetics-lambda":                        "backend/lambda",
-	"github.com/velonetics/velonetics-soap/v2":                       "backend/soap",
-	"github.com/velonetics/velonetics-grpc/v2":                       "grpc",
-	"github.com/velonetics/velonetics-grpc/v2/client":                "backend/grpc",
-	"github.com/velonetics/velonetics-pubsub/publisher":              "backend/pubsub/publisher",
-	"github.com/velonetics/velonetics-pubsub/subscriber":             "backend/pubsub/subscriber",
-	"github.com/velonetics/velonetics-pubsub/kafka/publisher":        "backend/pubsub/publisher/kafka",
-	"github.com/velonetics/velonetics-pubsub/kafka/subscriber":       "backend/pubsub/subscriber/kafka",
-	"github.com/velonetics/velonetics-pubsub/async":                "async/kafka",
-	"github.com/velonetics/lura/v2/transport/http/client/graphql": "backend/graphql",
-	"github.com/velonetics/velonetics-ce/v2/http":                          "backend/http",
+	"github.com/pucora/velonetics-amqp/consume":                  "backend/amqp/consumer",
+	"github.com/pucora/velonetics-amqp/produce":                  "backend/amqp/producer",
+	"github.com/pucora/velonetics-lambda":                        "backend/lambda",
+	"github.com/pucora/velonetics-soap/v2":                       "backend/soap",
+	"github.com/pucora/velonetics-grpc/v2":                       "grpc",
+	"github.com/pucora/velonetics-grpc/v2/client":                "backend/grpc",
+	"github.com/pucora/velonetics-pubsub/publisher":              "backend/pubsub/publisher",
+	"github.com/pucora/velonetics-pubsub/subscriber":             "backend/pubsub/subscriber",
+	"github.com/pucora/velonetics-pubsub/kafka/publisher":        "backend/pubsub/publisher/kafka",
+	"github.com/pucora/velonetics-pubsub/kafka/subscriber":       "backend/pubsub/subscriber/kafka",
+	"github.com/pucora/velonetics-pubsub/async":                "async/kafka",
+	"github.com/pucora/lura/v2/transport/http/client/graphql": "backend/graphql",
+	"github.com/pucora/velonetics-ce/v2/http":                          "backend/http",
 
-	"github_com/velonetics/velonetics-gelf":       "telemetry/gelf",
-	"github_com/velonetics/velonetics-gologging":  "telemetry/logging",
-	"github_com/velonetics/velonetics-logstash":   "telemetry/logstash",
-	"github_com/velonetics/velonetics-metrics":    "telemetry/metrics",
-	"github_com/velonetics/velonetics-influx":     "telemetry/influx",
-	"github_com/velonetics/velonetics-opencensus": "telemetry/opencensus",
+	"github_com/pucora/velonetics-gelf":       "telemetry/gelf",
+	"github_com/pucora/velonetics-gologging":  "telemetry/logging",
+	"github_com/pucora/velonetics-logstash":   "telemetry/logstash",
+	"github_com/pucora/velonetics-metrics":    "telemetry/metrics",
+	"github_com/pucora/velonetics-influx":     "telemetry/influx",
+	"github_com/pucora/velonetics-opencensus": "telemetry/opencensus",
 
-	"github.com/velonetics/velonetics-lua/router":        "modifier/lua-endpoint",
-	"github.com/velonetics/velonetics-lua/proxy":         "modifier/lua-proxy",
-	"github.com/velonetics/velonetics-lua/proxy/backend": "modifier/lua-backend",
-	"github.com/velonetics/velonetics-martian":           "modifier/martian",
+	"github.com/pucora/velonetics-lua/router":        "modifier/lua-endpoint",
+	"github.com/pucora/velonetics-lua/proxy":         "modifier/lua-proxy",
+	"github.com/pucora/velonetics-lua/proxy/backend": "modifier/lua-backend",
+	"github.com/pucora/velonetics-martian":           "modifier/martian",
 
+}
+
+func registerAliases() {
+	for key, alias := range aliases {
+		config.ExtraConfigAlias[alias] = key
+	}
+	// Legacy velonetics.io namespace keys in extra_config remain accepted.
+	for key := range aliases {
+		legacyKey := strings.Replace(key, "github.com/pucora/", "github.com/velonetics/", 1)
+		legacyKey = strings.Replace(legacyKey, "github_com/pucora/", "github_com/velonetics/", 1)
+		if legacyKey != key {
+			config.ExtraConfigAlias[legacyKey] = key
+		}
+	}
 }

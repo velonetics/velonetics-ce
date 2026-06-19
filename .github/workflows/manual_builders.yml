@@ -48,7 +48,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ github.event.inputs.semver }}
             type=semver,pattern={{major}},value=${{ github.event.inputs.semver }}
             type=raw,value=latest-linux-generic
-      - name: Build and push Velonetics plugin builder (Alpine)
+      - name: Build and push Pucora plugin builder (Alpine)
         id: container-build
         uses: docker/build-push-action@v2
         with:
@@ -60,7 +60,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push Velonetics plugin builder (Linux generic)
+      - name: Build and push Pucora plugin builder (Linux generic)
         id: container-build-linux-generic
         uses: docker/build-push-action@v2
         with:

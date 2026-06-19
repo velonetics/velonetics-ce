@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	handshakeMessage = `{"msg":"Velonetics WS proxy starting"}`
+	handshakeMessage = `{"msg":"Pucora WS proxy starting"}`
 	handshakeOK      = "OK"
 	hs256KeyB64      = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
 )

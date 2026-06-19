@@ -4,7 +4,7 @@ set -euo pipefail
 
 EXPECTED="${1:-}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-CHART_DIR="${ROOT_DIR}/deploy/helm/velonetics"
+CHART_DIR="${ROOT_DIR}/deploy/helm/pucora"
 CHART_YAML="${CHART_DIR}/Chart.yaml"
 VALUES_YAML="${CHART_DIR}/values.yaml"
 MAKEFILE="${ROOT_DIR}/Makefile"

@@ -83,7 +83,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ env.RELEASE_TAG }}
             type=semver,pattern={{major}},value=${{ env.RELEASE_TAG }}
             type=raw,value=latest-linux-generic
-      - name: Build and push Velonetics plugin builder (Alpine)
+      - name: Build and push Pucora plugin builder (Alpine)
         id: container-build
         uses: docker/build-push-action@v2
         with:
@@ -95,7 +95,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push Velonetics plugin builder (Linux generic)
+      - name: Build and push Pucora plugin builder (Linux generic)
         id: container-build-linux-generic
         uses: docker/build-push-action@v2
         with:
@@ -237,7 +237,7 @@ jobs:
       - name: Fetch JSON schema
         run: |
           curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
-            https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.3/v2.13/velonetics.json
+            https://raw.githubusercontent.com/pucora/velonetics-schema/v2.0.3/v2.13/pucora.json
 
       - name: Vendor modules for offline Docker build
         run: GOWORK=off go mod vendor
@@ -255,11 +255,11 @@ jobs:
             --build-arg GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g') \
             --build-arg ALPINE_VERSION=$(grep -m 1 ALPINE_VERSION Makefile | sed 's/^.*= //g') \
             --build-arg VERSION=${IMAGE_TAG#v} \
-            -t "niteesh20/velonetics:${IMAGE_TAG}" \
-            -t "niteesh20/velonetics:${IMAGE_TAG#v}" \
+            -t "niteesh20/pucora:${IMAGE_TAG}" \
+            -t "niteesh20/pucora:${IMAGE_TAG#v}" \
             .
-          docker push "niteesh20/velonetics:${IMAGE_TAG}"
-          docker push "niteesh20/velonetics:${IMAGE_TAG#v}"
+          docker push "niteesh20/pucora:${IMAGE_TAG}"
+          docker push "niteesh20/pucora:${IMAGE_TAG#v}"
 
   helm-chart:
     name: Publish Helm chart to OCI
@@ -291,8 +291,8 @@ jobs:
         run: |
           APP_VERSION=${RELEASE_TAG#v}
           deploy/helm/scripts/verify-chart-version.sh "${APP_VERSION}"
-          helm package deploy/helm/velonetics \
+          helm package deploy/helm/pucora \
             --version "${APP_VERSION}" \
             --app-version "${APP_VERSION}"
           helm push "velonetics-${APP_VERSION}.tgz" "oci://ghcr.io/${{ github.repository_owner }}/charts"
-          echo "Published oci://ghcr.io/${{ github.repository_owner }}/charts/velonetics:${APP_VERSION}"
+          echo "Published oci://ghcr.io/${{ github.repository_owner }}/charts/pucora:${APP_VERSION}"

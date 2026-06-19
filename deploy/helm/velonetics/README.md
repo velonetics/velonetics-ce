@@ -1,9 +1,9 @@
-# Velonetics Helm Chart
+# Pucora Helm Chart
 
-Deploy the [Velonetics API Gateway](https://velonetics.io) on Kubernetes.
+Deploy the [Pucora API Gateway](https://pucora.io) on Kubernetes.
 
-**Source repository:** [github.com/velonetics/velonetics-ce](https://github.com/velonetics/velonetics-ce)  
-**Chart path:** [`deploy/helm/velonetics/`](https://github.com/velonetics/velonetics-ce/tree/main/deploy/helm/velonetics)
+**Source repository:** [github.com/pucora/velonetics-ce](https://github.com/pucora/velonetics-ce)  
+**Chart path:** [`deploy/helm/pucora/`](https://github.com/pucora/velonetics-ce/tree/main/deploy/helm/pucora)
 
 ## Prerequisites
 
@@ -17,9 +17,9 @@ Deploy the [Velonetics API Gateway](https://velonetics.io) on Kubernetes.
 ## Quick start
 
 ```bash
-git clone https://github.com/velonetics/velonetics-ce.git
+git clone https://github.com/pucora/velonetics-ce.git
 cd velonetics-ce
-helm install my-gateway ./deploy/helm/velonetics
+helm install my-gateway ./deploy/helm/pucora
 ```
 
 Verify:
@@ -33,7 +33,7 @@ helm test my-gateway
 ### Install from OCI registry (on release)
 
 ```bash
-helm install my-gateway oci://ghcr.io/velonetics/charts/velonetics --version 2.1.1
+helm install my-gateway oci://ghcr.io/pucora/charts/pucora --version 2.1.1
 ```
 
 ## Versioning discipline
@@ -41,8 +41,8 @@ helm install my-gateway oci://ghcr.io/velonetics/charts/velonetics --version 2.1
 Chart metadata is kept in sync with the gateway release version in:
 
 - `Makefile` → `VERSION`
-- `deploy/helm/velonetics/Chart.yaml` → `version` and `appVersion`
-- `deploy/helm/velonetics/values.yaml` → `image.tag`
+- `deploy/helm/pucora/Chart.yaml` → `version` and `appVersion`
+- `deploy/helm/pucora/values.yaml` → `image.tag`
 
 Before tagging a release:
 
@@ -69,29 +69,29 @@ make helm-cluster-test
 | [`ci/values-istio.yaml`](ci/values-istio.yaml) | Istio sidecar injection with startup probe |
 
 ```bash
-helm install my-gateway ./deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-prod.yaml
+helm install my-gateway ./deploy/helm/pucora -f deploy/helm/pucora/ci/values-prod.yaml
 ```
 
 ## Configuration modes
 
 | Mode | Description |
 |------|-------------|
-| `configmap` (default) | Mount `velonetics.json` from a ConfigMap |
-| `secret` | Mount `velonetics.json` from a Secret (sensitive credentials) |
+| `configmap` (default) | Mount `pucora.json` from a ConfigMap |
+| `secret` | Mount `pucora.json` from a Secret (sensitive credentials) |
 | `image` | Config baked into custom Docker image (production best practice) |
 
 ```bash
 # Custom config file
-helm install my-gateway ./deploy/helm/velonetics \
-  --set-file config.veloneticsJson=./velonetics.json
+helm install my-gateway ./deploy/helm/pucora \
+  --set-file config.veloneticsJson=./pucora.json
 
 # Secret mode
-helm install my-gateway ./deploy/helm/velonetics \
+helm install my-gateway ./deploy/helm/pucora \
   --set config.mode=secret \
-  --set-file config.veloneticsJson=./velonetics.json
+  --set-file config.veloneticsJson=./pucora.json
 
 # Immutable image
-helm install my-gateway ./deploy/helm/velonetics \
+helm install my-gateway ./deploy/helm/pucora \
   --set config.mode=image \
   --set image.repository=myregistry/velonetics-gateway \
   --set image.tag=v1.0.0
@@ -100,8 +100,8 @@ helm install my-gateway ./deploy/helm/velonetics \
 Validate config before deploy (recommended in CI/CD):
 
 ```bash
-docker run --rm -v $(pwd)/velonetics.json:/etc/velonetics/velonetics.json \
-  niteesh20/velonetics:2.1.1 check --lint -c /etc/velonetics/velonetics.json
+docker run --rm -v $(pwd)/pucora.json:/etc/pucora/pucora.json \
+  niteesh20/pucora:2.1.1 check --lint -c /etc/pucora/pucora.json
 ```
 
 ## Production hardening
@@ -136,7 +136,7 @@ topologySpreadConstraints:
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
-        app.kubernetes.io/name: velonetics
+        app.kubernetes.io/name: pucora
 
 podDisruptionBudget:
   enabled: true
@@ -249,7 +249,7 @@ keda:
     - type: prometheus
       metadata:
         serverAddress: http://prometheus:9090
-        query: sum(rate(http_requests_total{service="velonetics"}[2m]))
+        query: sum(rate(http_requests_total{service="pucora"}[2m]))
         threshold: "100"
 ```
 
@@ -274,8 +274,8 @@ podMonitor:
 prometheusRule:
   enabled: true
   rules:
-    - alert: VeloneticsDown
-      expr: up{job=~".*velonetics.*"} == 0
+    - alert: PucoraDown
+      expr: up{job=~".*pucora.*"} == 0
       for: 5m
       labels:
         severity: critical
@@ -307,9 +307,9 @@ gitops:
 
 ## Blue/green deployments
 
-Velonetics is stateless. For zero-downtime config changes:
+Pucora is stateless. For zero-downtime config changes:
 
-1. Build a new image with updated `velonetics.json` (`config.mode=image`)
+1. Build a new image with updated `pucora.json` (`config.mode=image`)
 2. Deploy a second Helm release (e.g. `my-gateway-green`)
 3. Switch the Service selector or Ingress backend to the new release
 4. Remove the old release
@@ -322,13 +322,13 @@ The chart does not install VPA. For right-sizing recommendations after go-live:
 
 ```bash
 kubectl apply -f https://github.com/kubernetes/autoscaler/releases/latest/download/vertical-pod-autoscaler.yaml
-# Create a VPA in "Off" or "Recommendation" mode targeting the velonetics Deployment
+# Create a VPA in "Off" or "Recommendation" mode targeting the pucora Deployment
 ```
 
 ## Upgrade, test, rollback
 
 ```bash
-helm upgrade my-gateway ./deploy/helm/velonetics -f my-values.yaml
+helm upgrade my-gateway ./deploy/helm/pucora -f my-values.yaml
 helm test my-gateway
 helm rollback my-gateway
 helm uninstall my-gateway
@@ -347,7 +347,7 @@ helm uninstall my-gateway
 | `sidecarInjection.enabled` | `false` | Mesh injection annotations |
 | `networkPolicy.enabled` | `false` | Ingress NetworkPolicy |
 | `keda.enabled` | `false` | KEDA ScaledObject |
-| `tests.configCheck` | `true` | `helm test` runs `velonetics check` |
+| `tests.configCheck` | `true` | `helm test` runs `pucora check` |
 
 See [`values.yaml`](values.yaml) and [`values.schema.json`](values.schema.json) for the full list.
 

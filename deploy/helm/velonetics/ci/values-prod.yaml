@@ -47,10 +47,10 @@ serviceMonitor:
 prometheusRule:
   enabled: true
   rules:
-    - alert: VeloneticsDown
-      expr: up{job=~".*velonetics.*"} == 0
+    - alert: PucoraDown
+      expr: up{job=~".*pucora.*"} == 0
       for: 5m
       labels:
         severity: critical
       annotations:
-        summary: Velonetics gateway is down
+        summary: Pucora gateway is down

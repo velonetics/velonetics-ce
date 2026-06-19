@@ -1,11 +1,11 @@
-package velonetics
+package pucora
 
 import (
 	"context"
 
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/sd/dnssrv"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/sd/dnssrv"
 )
 
 // RegisterSubscriberFactories registers all the available sd adaptors

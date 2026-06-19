@@ -19,55 +19,55 @@ jobs:
 
       - name: WebSocket published module tests
         run: |
-          git clone --depth 1 --branch v2.0.1 https://github.com/velonetics/velonetics-websocket.git /tmp/velonetics-websocket
+          git clone --depth 1 --branch v2.0.1 https://github.com/pucora/velonetics-websocket.git /tmp/velonetics-websocket
           cd /tmp/velonetics-websocket && go test -count=1 .
 
       - name: SOAP published module tests
         run: |
-          git clone --depth 1 --branch v2.1.0 https://github.com/velonetics/velonetics-soap.git /tmp/velonetics-soap
+          git clone --depth 1 --branch v2.1.0 https://github.com/pucora/velonetics-soap.git /tmp/velonetics-soap
           cd /tmp/velonetics-soap && go test -count=1 .
 
       - name: gRPC published module tests
         run: |
-          git clone --depth 1 --branch v2.0.1 https://github.com/velonetics/velonetics-grpc.git /tmp/velonetics-grpc
+          git clone --depth 1 --branch v2.0.1 https://github.com/pucora/velonetics-grpc.git /tmp/velonetics-grpc
           cd /tmp/velonetics-grpc && go test -count=1 ./...
 
       - name: Lura GraphQL module tests
         run: |
-          git clone --depth 1 --branch v2.0.4 https://github.com/velonetics/lura.git /tmp/velonetics-lura
+          git clone --depth 1 --branch v2.0.4 https://github.com/pucora/lura.git /tmp/velonetics-lura
           cd /tmp/velonetics-lura && go test -count=1 ./transport/http/client/graphql/... ./proxy/... -run 'GraphQL|GetOptions|Resolve|ExtraConfig'
 
       - name: Fetch JSON schema
         run: |
           curl -fsSL -o cmd/velonetics-ce/schema/schema.json \
-            https://raw.githubusercontent.com/velonetics/velonetics-schema/v2.0.2/v2.13/velonetics.json
+            https://raw.githubusercontent.com/pucora/velonetics-schema/v2.0.2/v2.13/pucora.json
 
       - name: Build
         run: |
           VERSION=$(grep '^VERSION :=' Makefile | awk '{print $3}')
-          go build -ldflags="-X github.com/velonetics/lura/v2/core.VeloneticsVersion=${VERSION}" \
-            -o velonetics ./cmd/velonetics-ce
+          go build -ldflags="-X github.com/pucora/lura/v2/core.PucoraVersion=${VERSION}" \
+            -o pucora ./cmd/velonetics-ce
 
       - name: Validate WebSocket fixtures
         run: |
-          ./velonetics check -c tests/fixtures/ws_direct.json
-          ./velonetics check -c tests/fixtures/ws_multiplex.json
-          ./velonetics check -c tests/fixtures/ws_jwt.json
-          ./velonetics check -c velonetics-ws.json
-          ./velonetics check -c tests/fixtures/soap_country.json
-          ./velonetics check -c tests/fixtures/grpc_client.json
-          ./velonetics check -c tests/fixtures/grpc_client_mapping.json
-          ./velonetics check -c tests/fixtures/grpc_server.json
-          ./velonetics check -c tests/fixtures/grpc_server_mixed.json
-          ./velonetics check -c tests/fixtures/grpc_server_jwt.json
-          ./velonetics check -c tests/fixtures/graphql_mutation_post.json
-          ./velonetics check -c tests/fixtures/graphql_query_get.json
-          ./velonetics check -c tests/fixtures/graphql_query_path.json
-          ./velonetics check -c tests/fixtures/graphql_proxy.json
-          ./velonetics check -c tests/fixtures/graphql_proxy_cors.json
-          ./velonetics check -c tests/fixtures/graphql_federation.json
-          ./velonetics check -c tests/fixtures/graphql_jwt.json
-          ./velonetics check -c tests/fixtures/graphql_ratelimit.json
+          ./pucora check -c tests/fixtures/ws_direct.json
+          ./pucora check -c tests/fixtures/ws_multiplex.json
+          ./pucora check -c tests/fixtures/ws_jwt.json
+          ./pucora check -c pucora-ws.json
+          ./pucora check -c tests/fixtures/soap_country.json
+          ./pucora check -c tests/fixtures/grpc_client.json
+          ./pucora check -c tests/fixtures/grpc_client_mapping.json
+          ./pucora check -c tests/fixtures/grpc_server.json
+          ./pucora check -c tests/fixtures/grpc_server_mixed.json
+          ./pucora check -c tests/fixtures/grpc_server_jwt.json
+          ./pucora check -c tests/fixtures/graphql_mutation_post.json
+          ./pucora check -c tests/fixtures/graphql_query_get.json
+          ./pucora check -c tests/fixtures/graphql_query_path.json
+          ./pucora check -c tests/fixtures/graphql_proxy.json
+          ./pucora check -c tests/fixtures/graphql_proxy_cors.json
+          ./pucora check -c tests/fixtures/graphql_federation.json
+          ./pucora check -c tests/fixtures/graphql_jwt.json
+          ./pucora check -c tests/fixtures/graphql_ratelimit.json
 
       - name: GraphQL integration test
         run: cd tests && go test -count=1 -run TestGraphQLIntegration -timeout 2m
@@ -89,28 +89,28 @@ jobs:
           version: v3.16.4
 
       - name: Lint Helm chart
-        run: helm lint deploy/helm/velonetics
+        run: helm lint deploy/helm/pucora
 
       - name: Verify chart version alignment
         run: deploy/helm/scripts/verify-chart-version.sh
 
       - name: Template Helm chart (default)
-        run: helm template test deploy/helm/velonetics > /dev/null
+        run: helm template test deploy/helm/pucora > /dev/null
 
       - name: Template Helm chart (optional resources)
         run: |
-          helm template test deploy/helm/velonetics \
+          helm template test deploy/helm/pucora \
             --set ingress.enabled=true \
             --set autoscaling.enabled=true \
             --set podDisruptionBudget.enabled=true \
             --set serviceMonitor.enabled=true > /dev/null
 
       - name: Template Helm chart (image config mode)
-        run: helm template test deploy/helm/velonetics --set config.mode=image > /dev/null
+        run: helm template test deploy/helm/pucora --set config.mode=image > /dev/null
 
       - name: Template Helm chart (NLB and sidecar injection)
         run: |
-          helm template test deploy/helm/velonetics \
+          helm template test deploy/helm/pucora \
             --set service.nlb.enabled=true \
             --set service.nlb.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=nlb \
             --set sidecarInjection.enabled=true \
@@ -118,13 +118,13 @@ jobs:
 
       - name: Lint Helm chart with example values
         run: |
-          helm lint deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-prod.yaml
-          helm lint deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-aws-nlb.yaml
-          helm lint deploy/helm/velonetics -f deploy/helm/velonetics/ci/values-istio.yaml
+          helm lint deploy/helm/pucora -f deploy/helm/pucora/ci/values-prod.yaml
+          helm lint deploy/helm/pucora -f deploy/helm/pucora/ci/values-aws-nlb.yaml
+          helm lint deploy/helm/pucora -f deploy/helm/pucora/ci/values-istio.yaml
 
       - name: Template Helm chart (all optional resources)
         run: |
-          helm template test deploy/helm/velonetics \
+          helm template test deploy/helm/pucora \
             --set ingress.enabled=true \
             --set certificate.enabled=true \
             --set httpRoute.enabled=true \
@@ -133,7 +133,7 @@ jobs:
             --set rbac.create=true \
             --set podMonitor.enabled=true \
             --set prometheusRule.enabled=true \
-            --set 'prometheusRule.rules[0].alert'=VeloneticsDown \
+            --set 'prometheusRule.rules[0].alert'=PucoraDown \
             --set 'prometheusRule.rules[0].expr'=up==0 \
             --set keda.enabled=true \
             --set 'keda.triggers[0].type'=cpu \

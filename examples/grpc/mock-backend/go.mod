@@ -1,4 +1,4 @@
-module github.com/velonetics/velonetics-grpc-mock
+module github.com/pucora/velonetics-grpc-mock
 
 go 1.25.0
 

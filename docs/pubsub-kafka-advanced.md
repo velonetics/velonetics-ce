@@ -106,7 +106,7 @@ Use `mechanism: "OAUTHBEARER"` and pass the bearer token in `password`:
 
 ## Offset commits
 
-Kafka has no per-message ACK. Velonetics commits partition offsets after each message is read, including when the decode step fails after a successful fetch.
+Kafka has no per-message ACK. Pucora commits partition offsets after each message is read, including when the decode step fails after a successful fetch.
 
 ## Example
 

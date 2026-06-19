@@ -21,7 +21,7 @@ services:
     ports:
       - "8081:8081"
 
-  velonetics:
+  pucora:
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -30,10 +30,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./velonetics.json:/etc/velonetics/velonetics.json:ro
+      - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       redpanda:
         condition: service_healthy
       mock-webhook:
         condition: service_started
-    command: ["run", "-c", "/etc/velonetics/velonetics.json"]
+    command: ["run", "-c", "/etc/pucora/pucora.json"]

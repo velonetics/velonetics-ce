@@ -1,10 +1,10 @@
 {
-  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "$schema": "https://pucora.io/schema/v2.13/pucora.json",
   "version": 3,
   "port": 8080,
   "extra_config": {
     "grpc": {
-      "catalog": ["/etc/velonetics/grpcatalog/flights.pb"],
+      "catalog": ["/etc/pucora/grpcatalog/flights.pb"],
       "server": {
         "services": [
           {

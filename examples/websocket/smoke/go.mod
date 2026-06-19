@@ -1,4 +1,4 @@
-module github.com/velonetics/velonetics-ce/examples/websocket/smoke
+module github.com/pucora/velonetics-ce/examples/websocket/smoke
 
 go 1.24.0
 

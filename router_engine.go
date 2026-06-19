@@ -1,18 +1,18 @@
-package velonetics
+package pucora
 
 import (
 	"encoding/json"
 
 	"github.com/gin-gonic/gin"
 
-	botdetector "github.com/velonetics/velonetics-botdetector/v2/gin"
-	httpsecure "github.com/velonetics/velonetics-httpsecure/v2/gin"
-	lua "github.com/velonetics/velonetics-lua/v2/router/gin"
-	opencensus "github.com/velonetics/velonetics-opencensus/v2/router/gin"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/core"
-	luragin "github.com/velonetics/lura/v2/router/gin"
-	"github.com/velonetics/lura/v2/transport/http/server"
+	botdetector "github.com/pucora/velonetics-botdetector/v2/gin"
+	httpsecure "github.com/pucora/velonetics-httpsecure/v2/gin"
+	lua "github.com/pucora/velonetics-lua/v2/router/gin"
+	opencensus "github.com/pucora/velonetics-opencensus/v2/router/gin"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/core"
+	luragin "github.com/pucora/lura/v2/router/gin"
+	"github.com/pucora/lura/v2/transport/http/server"
 )
 
 // NewEngine creates a new gin engine with some default values and a secure middleware
@@ -49,7 +49,7 @@ func NewEngine(cfg config.ServiceConfig, opt luragin.EngineOptions) *gin.Engine 
 }
 
 func defaultHandler(c *gin.Context) {
-	c.Header(core.VeloneticsHeaderName, core.VeloneticsHeaderValue)
+	c.Header(core.PucoraHeaderName, core.PucoraHeaderValue)
 	c.Header(server.CompleteResponseHeaderName, server.HeaderIncompleteResponseValue)
 }
 

@@ -1,7 +1,7 @@
 {
-  "$schema": "https://velonetics.io/schema/v2.13/velonetics.json",
+  "$schema": "https://pucora.io/schema/v2.13/pucora.json",
   "version": 3,
-  "name": "Velonetics NATS pub/sub example",
+  "name": "Pucora Azure Service Bus pub/sub example",
   "port": 8080,
   "extra_config": {
     "telemetry/logging": {
@@ -18,7 +18,7 @@
       "method": "POST",
       "backend": [
         {
-          "host": ["nats://"],
+          "host": ["azuresb://"],
           "url_pattern": "/ignored",
           "disable_host_sanitize": true,
           "extra_config": {
@@ -34,7 +34,7 @@
       "method": "GET",
       "backend": [
         {
-          "host": ["nats://"],
+          "host": ["azuresb://"],
           "url_pattern": "/ignored",
           "disable_host_sanitize": true,
           "encoding": "json",

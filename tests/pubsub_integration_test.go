@@ -14,9 +14,9 @@ import (
 )
 
 func TestPubSubMemRoundTripIntegration(t *testing.T) {
-	bin := "../velonetics"
+	bin := "../pucora"
 	if _, err := os.Stat(bin); err != nil {
-		t.Skip("velonetics binary not built; run make build first")
+		t.Skip("pucora binary not built; run make build first")
 	}
 
 	gatewayPort, err := freePort()
@@ -140,9 +140,9 @@ func TestPubSubMemRoundTripIntegration(t *testing.T) {
 }
 
 func TestPubSubFixtureSchema(t *testing.T) {
-	bin := "../velonetics"
+	bin := "../pucora"
 	if _, err := os.Stat(bin); err != nil {
-		t.Skip("velonetics binary not built; run make build first")
+		t.Skip("pucora binary not built; run make build first")
 	}
 	path := filepath.Join("fixtures", "pubsub_mem.json")
 	cmd := exec.Command(bin, "check", "-c", path)

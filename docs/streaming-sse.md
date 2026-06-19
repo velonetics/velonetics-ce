@@ -1,6 +1,6 @@
 # HTTP Streaming & Server-Sent Events (SSE)
 
-Velonetics supports transparent HTTP streaming and Server-Sent Events (SSE) using the same **no-op proxy** model as [KrakenD Enterprise](https://www.krakend.io/docs/enterprise/endpoints/streaming/). The gateway forwards response chunks as they arrive without buffering or transforming the payload.
+Pucora supports transparent HTTP streaming and Server-Sent Events (SSE) using the same **no-op proxy** model as [KrakenD Enterprise](https://www.krakend.io/docs/enterprise/endpoints/streaming/). The gateway forwards response chunks as they arrive without buffering or transforming the payload.
 
 Unlike WebSockets, no separate module or `extra_config` namespace is required — streaming is enabled through endpoint and backend encoding settings.
 
@@ -119,16 +119,16 @@ Streaming endpoints use standard endpoint/backend settings. Three requirements:
 | `response_header_timeout` | Service | Use `"0s"` or at least `"30s"` when streaming (validated at startup) |
 | `max_shutdown_wait_time` | Service | Grace period before force-killing streams on shutdown |
 
-**Important:** Keep the root service `timeout` short. Set long timeouts only on streaming endpoints. Velonetics **rejects invalid streaming configs at startup** (`velonetics check` / `velonetics run`), not only via audit warnings.
+**Important:** Keep the root service `timeout` short. Set long timeouts only on streaming endpoints. Pucora **rejects invalid streaming configs at startup** (`pucora check` / `pucora run`), not only via audit warnings.
 
 ## How it works
 
 ```
-Client ──persistent HTTP──► Velonetics ──persistent HTTP──► Backend
+Client ──persistent HTTP──► Pucora ──persistent HTTP──► Backend
          chunks forwarded as-is, connection stays open
 ```
 
-Velonetics uses `NoOpHTTPResponseParser` to pipe the backend response body directly to the client via flush-aware streaming copy. Request validation (JWT, rate limits, IP filtering) still applies before the proxy runs.
+Pucora uses `NoOpHTTPResponseParser` to pipe the backend response body directly to the client via flush-aware streaming copy. Request validation (JWT, rate limits, IP filtering) still applies before the proxy runs.
 
 ## Compatible middleware
 
@@ -146,14 +146,14 @@ Velonetics uses `NoOpHTTPResponseParser` to pipe the backend response body direc
 | Backend HTTP cache | **No** (rejected at startup) |
 | Martian response scope | **No** (rejected at startup) |
 
-Run `velonetics check` before deploy — invalid streaming combinations fail config parsing. `velonetics audit` also warns on related misconfigurations (rules 5.2.4–5.2.6).
+Run `pucora check` before deploy — invalid streaming combinations fail config parsing. `pucora audit` also warns on related misconfigurations (rules 5.2.4–5.2.6).
 
 ## Operational considerations
 
 - **Connection persistence:** Streaming connections are long-lived. Ensure load balancers and reverse proxies disable response buffering and allow idle connections.
 - **No payload processing:** Backends must emit valid stream formats (`text/event-stream` for SSE).
 - **Redeployments:** Long sessions delay shutdown. Use `max_shutdown_wait_time` to cap graceful drain.
-- **Client reconnection:** Velonetics does not auto-reconnect clients; implement retry logic in the client.
+- **Client reconnection:** Pucora does not auto-reconnect clients; implement retry logic in the client.
 - **Resource usage:** Each stream holds open connections on the gateway and backend.
 
 ## Troubleshooting
@@ -164,11 +164,11 @@ Run `velonetics check` before deploy — invalid streaming combinations fail con
 | Connection drops early | Timeout too short | Increase endpoint `timeout`; check service `write_timeout` |
 | Empty response | Wrong backend encoding | Set backend `encoding: "no-op"` |
 | Connection drops before first byte | `response_header_timeout` too low | Set `"response_header_timeout": "0s"` or at least `"30s"` |
-| Config fails `velonetics check` | Incompatible middleware on streaming endpoint | Remove response Lua, schema, modifiers, cache, or multi-backend |
+| Config fails `pucora check` | Incompatible middleware on streaming endpoint | Remove response Lua, schema, modifiers, cache, or multi-backend |
 
 ## Requirements
 
-- `github.com/velonetics/lura/v2` **v2.0.3+** (flush-aware streaming proxy and startup validation)
+- `github.com/pucora/lura/v2` **v2.0.3+** (flush-aware streaming proxy and startup validation)
 
 ## See also
 

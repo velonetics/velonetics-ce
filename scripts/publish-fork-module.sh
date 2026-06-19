@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publish a Go module from a sibling repo to github.com/velonetics/<name>
+# Publish a Go module from a sibling repo to github.com/pucora/<name>
 #
 # Usage:
 #   ./scripts/publish-fork-module.sh velonetics-websocket v2.0.1
@@ -39,7 +39,7 @@ case "${MODULE_NAME}" in
 esac
 
 SRC="${WORKSPACE}/${LOCAL_NAME}"
-REMOTE="git@github.com:velonetics/${GH_NAME}.git"
+REMOTE="git@github.com:pucora/${GH_NAME}.git"
 
 if [[ ! -d "$SRC" ]]; then
   echo "module not found: $SRC" >&2
@@ -59,7 +59,7 @@ cleanup() { rm -rf "$BASE"; }
 trap cleanup EXIT
 
 mkdir -p "$STAGE"
-echo "==> Staging ${LOCAL_NAME} -> velonetics/${GH_NAME}"
+echo "==> Staging ${LOCAL_NAME} -> pucora/${GH_NAME}"
 rsync -a --exclude '.git' "$SRC/" "$STAGE/"
 
 if [[ -f "$ROOT/LICENSE" ]]; then
@@ -78,10 +78,10 @@ if $DRY_RUN; then
   exit 0
 fi
 
-if ! gh repo view "velonetics/${GH_NAME}" >/dev/null 2>&1; then
-  echo "==> Creating github.com/velonetics/${GH_NAME}"
-  gh repo create "velonetics/${GH_NAME}" --public \
-    --description "Velonetics CE module: ${GH_NAME}"
+if ! gh repo view "pucora/${GH_NAME}" >/dev/null 2>&1; then
+  echo "==> Creating github.com/pucora/${GH_NAME}"
+  gh repo create "pucora/${GH_NAME}" --public \
+    --description "Pucora CE module: ${GH_NAME}"
 fi
 
 echo "==> Syncing with ${REMOTE}"
@@ -108,4 +108,4 @@ git tag -a "$TAG" -m "${GH_NAME} ${TAG}"
 git push origin "$TAG" --force
 
 echo "==> Published ${REMOTE} @ ${TAG}"
-echo "Next: bump github.com/velonetics/${GH_NAME}/v2 in velonetics-ce go.mod if needed."
+echo "Next: bump github.com/pucora/${GH_NAME}/v2 in velonetics-ce go.mod if needed."
