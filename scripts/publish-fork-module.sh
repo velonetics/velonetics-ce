@@ -70,7 +70,10 @@ cd "$STAGE"
 echo "==> Preparing standalone go.mod"
 awk '/^replace /,/^\)/{next} 1' go.mod > go.mod.standalone
 mv go.mod.standalone go.mod
-GOPROXY=direct go mod tidy
+if ! GOPROXY=direct GOSUMDB=off GOPRIVATE=github.com/pucora/* go mod tidy; then
+  echo "ERROR: go mod tidy failed for ${GH_NAME} — fix deps in local ${LOCAL_NAME}/go.mod first" >&2
+  exit 1
+fi
 
 if $DRY_RUN; then
   echo "==> Dry run complete. Module staged at ${STAGE}"

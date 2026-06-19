@@ -6,40 +6,40 @@ require (
 	github.com/coder/websocket v1.8.13
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-contrib/uuid v1.2.0
-	github.com/pucora/bloomfilter/v2 v2.0.0
-	github.com/pucora/lura/v2 v2.0.8
-	github.com/pucora/pucora-amqp/v2 v2.0.3
-	github.com/pucora/pucora-audit v1.0.1
-	github.com/pucora/pucora-botdetector/v2 v2.0.0
-	github.com/pucora/pucora-cel/v2 v2.0.0
-	github.com/pucora/pucora-circuitbreaker/v3 v3.0.0
-	github.com/pucora/pucora-cobra/v2 v2.0.0
-	github.com/pucora/pucora-cors/v2 v2.0.0
-	github.com/pucora/pucora-flexibleconfig/v2 v2.0.0
-	github.com/pucora/pucora-gelf/v2 v2.0.0
-	github.com/pucora/pucora-gologging/v2 v2.0.0
-	github.com/pucora/pucora-grpc/v2 v2.0.7
-	github.com/pucora/pucora-httpcache/v2 v2.0.0
-	github.com/pucora/pucora-httpsecure/v2 v2.0.0
-	github.com/pucora/pucora-influx/v2 v2.0.0
-	github.com/pucora/pucora-jose/v2 v2.0.0
-	github.com/pucora/pucora-jsonschema/v2 v2.0.0
-	github.com/pucora/pucora-koanf v1.0.0
-	github.com/pucora/pucora-lambda/v2 v2.0.0
-	github.com/pucora/pucora-logstash/v2 v2.0.0
-	github.com/pucora/pucora-lua/v2 v2.0.0
-	github.com/pucora/pucora-martian/v2 v2.0.0
-	github.com/pucora/pucora-metrics/v2 v2.0.0
-	github.com/pucora/pucora-oauth2-clientcredentials/v2 v2.0.0
-	github.com/pucora/pucora-opencensus/v2 v2.0.0
-	github.com/pucora/pucora-otel v1.0.0
-	github.com/pucora/pucora-pubsub/v2 v2.0.5
-	github.com/pucora/pucora-ratelimit/v3 v3.0.0
-	github.com/pucora/pucora-rss/v2 v2.0.0
-	github.com/pucora/pucora-soap/v2 v2.2.2
-	github.com/pucora/pucora-usage/v2 v2.0.0
-	github.com/pucora/pucora-websocket/v2 v2.0.7
-	github.com/pucora/pucora-xml/v2 v2.0.0
+	github.com/pucora/bloomfilter/v2 v2.0.1
+	github.com/pucora/lura/v2 v2.0.9
+	github.com/pucora/pucora-amqp/v2 v2.0.4
+	github.com/pucora/pucora-audit v1.0.2
+	github.com/pucora/pucora-botdetector/v2 v2.0.1
+	github.com/pucora/pucora-cel/v2 v2.0.1
+	github.com/pucora/pucora-circuitbreaker/v3 v3.0.1
+	github.com/pucora/pucora-cobra/v2 v2.0.1
+	github.com/pucora/pucora-cors/v2 v2.0.1
+	github.com/pucora/pucora-flexibleconfig/v2 v2.0.1
+	github.com/pucora/pucora-gelf/v2 v2.0.1
+	github.com/pucora/pucora-gologging/v2 v2.0.1
+	github.com/pucora/pucora-grpc/v2 v2.0.8
+	github.com/pucora/pucora-httpcache/v2 v2.0.1
+	github.com/pucora/pucora-httpsecure/v2 v2.0.1
+	github.com/pucora/pucora-influx/v2 v2.0.1
+	github.com/pucora/pucora-jose/v2 v2.0.1
+	github.com/pucora/pucora-jsonschema/v2 v2.0.1
+	github.com/pucora/pucora-koanf v1.0.1
+	github.com/pucora/pucora-lambda/v2 v2.0.1
+	github.com/pucora/pucora-logstash/v2 v2.0.1
+	github.com/pucora/pucora-lua/v2 v2.0.1
+	github.com/pucora/pucora-martian/v2 v2.0.1
+	github.com/pucora/pucora-metrics/v2 v2.0.1
+	github.com/pucora/pucora-oauth2-clientcredentials/v2 v2.0.1
+	github.com/pucora/pucora-opencensus/v2 v2.0.1
+	github.com/pucora/pucora-otel v1.0.1
+	github.com/pucora/pucora-pubsub/v2 v2.0.6
+	github.com/pucora/pucora-ratelimit/v3 v3.0.1
+	github.com/pucora/pucora-rss/v2 v2.0.1
+	github.com/pucora/pucora-soap/v2 v2.2.3
+	github.com/pucora/pucora-usage/v2 v2.0.1
+	github.com/pucora/pucora-websocket/v2 v2.0.8
+	github.com/pucora/pucora-xml/v2 v2.0.1
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 	github.com/spf13/cobra v1.9.1
 	golang.org/x/sync v0.20.0
@@ -106,12 +106,16 @@ require (
 	github.com/aws/smithy-go v1.24.2 // indirect
 	github.com/beevik/etree v1.6.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bytedance/gopkg v0.1.3 // indirect
+	github.com/bytedance/sonic v1.15.0 // indirect
+	github.com/bytedance/sonic/loader v0.5.0 // indirect
 	github.com/catalinc/hashcash v0.0.0-20161205220751-e6bc29ff4de9 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect
+	github.com/cloudwego/base64x v0.1.6 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
@@ -174,6 +178,7 @@ require (
 	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.5 // indirect
+	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/knadh/koanf/maps v0.1.2 // indirect
 	github.com/knadh/koanf/parsers/json v1.0.0 // indirect
 	github.com/knadh/koanf/parsers/toml v0.1.0 // indirect
@@ -212,9 +217,9 @@ require (
 	github.com/prometheus/statsd_exporter v0.26.1 // indirect
 	github.com/pucora/binder v1.0.1 // indirect
 	github.com/pucora/flatmap v1.0.1 // indirect
-	github.com/pucora/go-auth0/v2 v2.0.0 // indirect
-	github.com/pucora/httpcache v1.0.0 // indirect
-	github.com/pucora/lru v1.0.0 // indirect
+	github.com/pucora/go-auth0/v2 v2.0.1 // indirect
+	github.com/pucora/httpcache v1.0.1 // indirect
+	github.com/pucora/lru v1.0.1 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.59.1 // indirect
 	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
@@ -229,7 +234,6 @@ require (
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/stoewer/go-strcase v1.3.1 // indirect
-	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/tmthrgd/atomics v0.0.0-20190904060638-dc7a5fcc7e0d // indirect
 	github.com/tmthrgd/go-bitset v0.0.0-20190904054048-394d9a556c05 // indirect
@@ -238,6 +242,7 @@ require (
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/tmthrgd/go-memset v0.0.0-20190904060434-6fb7a21f88f1 // indirect
 	github.com/tmthrgd/go-popcount v0.0.0-20190904054823-afb1ace8b04f // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/uber/jaeger-client-go v2.28.0+incompatible // indirect
 	github.com/ugorji/go/codec v1.3.1 // indirect
 	github.com/unrolled/secure v1.15.0 // indirect
@@ -273,6 +278,7 @@ require (
 	gocloud.dev/pubsub/natspubsub v0.45.0 // indirect
 	gocloud.dev/pubsub/rabbitpubsub v0.45.0 // indirect
 	gocloud.dev/secrets/hashivault v0.45.0 // indirect
+	golang.org/x/arch v0.22.0 // indirect
 	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
 	golang.org/x/mod v0.35.0 // indirect
