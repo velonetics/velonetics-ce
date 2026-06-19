@@ -31,7 +31,7 @@ done
 
 echo "==> Producing Kafka message"
 docker compose exec -T redpanda rpk topic create events >/dev/null 2>&1 || true
-printf '%s' '{"event":"async-smoke"}' | docker compose exec -T redpanda rpk topic produce events -k smoke-key >/dev/null
+printf '%s\n' '{"event":"async-smoke"}' | docker compose exec -T redpanda rpk topic produce events -k smoke-key >/dev/null
 
 echo "==> Waiting for async agent delivery"
 for i in $(seq 1 30); do

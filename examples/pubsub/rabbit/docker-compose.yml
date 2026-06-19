@@ -10,6 +10,26 @@ services:
       retries: 20
       start_period: 10s
 
+  rabbit-init:
+    image: rabbitmq:3-management-alpine
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: "no"
+    entrypoint:
+      - sh
+      - -c
+      - |
+        for i in $(seq 1 30); do
+          if rabbitmqadmin -H rabbitmq -u guest -p guest list exchanges >/dev/null 2>&1; then
+            break
+          fi
+          sleep 2
+        done
+        rabbitmqadmin -H rabbitmq -u guest -p guest declare exchange name=events type=fanout
+        rabbitmqadmin -H rabbitmq -u guest -p guest declare queue name=events durable=true
+        rabbitmqadmin -H rabbitmq -u guest -p guest declare binding source=events destination=events destination_type=queue
+
   pucora:
     build:
       context: ../../..
@@ -19,10 +39,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      RABBIT_SERVER_URL: guest:guest@rabbitmq:5672
+      RABBIT_SERVER_URL: amqp://guest:guest@rabbitmq:5672
     volumes:
       - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
-      rabbitmq:
-        condition: service_healthy
+      rabbit-init:
+        condition: service_completed_successfully
     command: ["run", "-c", "/etc/pucora/pucora.json"]

@@ -40,7 +40,7 @@
           "encoding": "json",
           "extra_config": {
             "backend/pubsub/subscriber": {
-              "subscription_url": "smokegroup?topic=events"
+              "subscription_url": "smokegroup?topic=events&offset=oldest"
             }
           }
         }
