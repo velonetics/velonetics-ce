@@ -27,7 +27,7 @@ services:
 
   pucora:
     build:
-      context: ../..
+      context: ../../..
       dockerfile: Dockerfile
       args:
         VERSION: "2.2.0"
