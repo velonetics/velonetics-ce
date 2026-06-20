@@ -256,7 +256,7 @@ jobs:
           VERSION="${IMAGE_TAG#v}"
           set -eux
 
-          if go mod tidy && go mod vendor; then
+          if go mod vendor; then
             docker build --pull \
               --build-arg GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g') \
               --build-arg ALPINE_VERSION=$(grep -m 1 ALPINE_VERSION Makefile | sed 's/^.*= //g') \
