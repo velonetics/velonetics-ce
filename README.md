@@ -69,13 +69,13 @@ See [examples/websocket/README.md](examples/websocket/README.md).
 
 ### Single image
 
-Published on Docker Hub: **[niteesh20/pucora](https://hub.docker.com/r/niteesh20/pucora)**
+Published on Docker Hub: **[pucora/pucora](https://hub.docker.com/r/pucora/pucora)**
 
 ```
-docker pull niteesh20/pucora:2.0.0
+docker pull pucora/pucora:2.0.0
 ```
 
-On each GitHub release, CI builds and pushes `niteesh20/pucora:$TAG` when `DOCKER_USERNAME` and `DOCKER_PASSWORD` repo secrets are set (`DOCKER_USERNAME` = `niteesh20`).
+On each GitHub release, CI builds and pushes `pucora/pucora:$TAG` when `DOCKER_USERNAME` and `DOCKER_PASSWORD` repo secrets are set (`DOCKER_USERNAME` = `pucora`).
 
 Build locally:
 
@@ -86,7 +86,7 @@ make docker
 Run it:
 
 ```
-docker run -it -p "8080:8080" -v $(pwd)/pucora.json:/etc/pucora/pucora.json niteesh20/pucora:2.0.0 run -c /etc/pucora/pucora.json
+docker run -it -p "8080:8080" -v $(pwd)/pucora.json:/etc/pucora/pucora.json pucora/pucora:2.0.0 run -c /etc/pucora/pucora.json
 ```
 
 ## Kubernetes / Helm

@@ -7,7 +7,7 @@ on:
         required: true
 name: Manual Builders
 env:
-  DOCKER_HUB_USER: niteesh20
+  DOCKER_HUB_USER: pucora
 jobs:
   builder:
     name: Generate builder containers

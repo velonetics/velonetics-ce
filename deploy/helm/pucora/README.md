@@ -137,7 +137,7 @@ Validate config before deploy (recommended in CI/CD):
 
 ```bash
 docker run --rm -v $(pwd)/pucora.json:/etc/pucora/pucora.json \
-  niteesh20/pucora:2.1.1 check --lint -c /etc/pucora/pucora.json
+  pucora/pucora:2.1.1 check --lint -c /etc/pucora/pucora.json
 ```
 
 ## Production hardening

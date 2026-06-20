@@ -340,7 +340,7 @@ See [examples/websocket/README.md](../examples/websocket/README.md).
 make docker
 docker run -p 8080:8080 \
   -v $(pwd)/pucora-ws.json:/etc/pucora/pucora.json \
-  niteesh20/pucora:2.0.0 run -c /etc/pucora/pucora.json
+  pucora/pucora:2.0.0 run -c /etc/pucora/pucora.json
 ```
 
 Ensure the container can reach backend `ws://` hosts (use host networking or service names in Docker Compose).

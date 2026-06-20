@@ -3,7 +3,7 @@
 replicaCount: 2
 
 image:
-  repository: niteesh20/pucora
+  repository: pucora/pucora
   tag: "2.2.0"
   pullPolicy: IfNotPresent
 

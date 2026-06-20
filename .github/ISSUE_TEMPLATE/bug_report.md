@@ -43,7 +43,7 @@ docker run --rm -it -v $PWD:/etc/pucora \
         -e FC_SETTINGS="/etc/pucora/config/settings" \
         -e FC_PARTIALS="/etc/pucora/config/partials" \
         -e FC_OUT=out.json \
-        niteesh20/pucora:2.0.0 \
+        pucora/pucora:2.0.0 \
         run -c /etc/pucora/config/pucora.json -d
 ```
 **Expected behavior**

@@ -9,7 +9,7 @@ on:
         type: string
 name: Handle Release
 env:
-  DOCKER_HUB_USER: niteesh20
+  DOCKER_HUB_USER: pucora
   RELEASE_TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
   CHECKOUT_REF: ${{ github.event_name == 'workflow_dispatch' && github.sha || (github.event.release.tag_name || github.event.inputs.tag) }}
 jobs:
@@ -65,7 +65,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: niteesh20/builder
+          images: pucora/builder
           tags: |
             type=semver,pattern={{version}},value=${{ env.RELEASE_TAG }}
             type=semver,pattern={{major}}.{{minor}},value=${{ env.RELEASE_TAG }}
@@ -75,7 +75,7 @@ jobs:
         id: meta-linux-generic
         uses: docker/metadata-action@v4
         with:
-          images: niteesh20/builder
+          images: pucora/builder
           flavor: |
             suffix=-linux-generic,onlatest=true
           tags: |
@@ -132,7 +132,7 @@ jobs:
           docker run --rm \
             -v "${{ github.workspace }}:/github/workspace" \
             -w /github/workspace \
-            "niteesh20/builder:${RELEASE_VERSION}-linux-generic" \
+            "pucora/builder:${RELEASE_VERSION}-linux-generic" \
             sh -c "git config --global --add safe.directory /github/workspace;
              export CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc ARCH=arm64 OS_TAG=_generic-linux GOARCH=arm64 GOHOSTARCH=amd64 EXTRA_LDFLAGS='-extld=aarch64-linux-gnu-gcc';
              make -e build && make -e tgz;
@@ -145,7 +145,7 @@ jobs:
             -v "${{ github.workspace }}:/github/workspace" \
             -w /github/workspace \
             --entrypoint /bin/bash \
-            niteesh20/fpm:deb \
+            pucora/fpm:deb \
             -c "make -e deb-release"
       - name: Build RPM package (AMD64)
         run: |
@@ -153,7 +153,7 @@ jobs:
             -v "${{ github.workspace }}:/github/workspace" \
             -w /github/workspace \
             --entrypoint /bin/bash \
-            niteesh20/fpm:rpm \
+            pucora/fpm:rpm \
             -c "echo '${{ secrets.PGP_SIGNING_KEY }}' > pgp.key;
              gpg --import pgp.key;
              cp builder/files/rpmmacros /etc/rpm/macros;
@@ -164,7 +164,7 @@ jobs:
           docker run --rm \
             -v "${{ github.workspace }}:/github/workspace" \
             -w /github/workspace \
-            "niteesh20/builder:${RELEASE_VERSION}" \
+            "pucora/builder:${RELEASE_VERSION}" \
             sh -c "export GOARCH=amd64 ARCH=amd64 OS_TAG=_alpine;
              make -e build && make -e tgz;
              make clean;
@@ -256,18 +256,18 @@ jobs:
               --build-arg GOLANG_VERSION=$(grep -m 1 GOLANG_VERSION Makefile | sed 's/^.*= //g') \
               --build-arg ALPINE_VERSION=$(grep -m 1 ALPINE_VERSION Makefile | sed 's/^.*= //g') \
               --build-arg VERSION="${VERSION}" \
-              -t "niteesh20/pucora:${IMAGE_TAG}" \
-              -t "niteesh20/pucora:${VERSION}" \
+              -t "pucora/pucora:${IMAGE_TAG}" \
+              -t "pucora/pucora:${VERSION}" \
               .
           else
-            echo "go mod vendor failed; retagging niteesh20/velonetics:${VERSION} as pucora"
-            docker pull "niteesh20/velonetics:${VERSION}"
-            docker tag "niteesh20/velonetics:${VERSION}" "niteesh20/pucora:${IMAGE_TAG}"
-            docker tag "niteesh20/velonetics:${VERSION}" "niteesh20/pucora:${VERSION}"
+            echo "go mod vendor failed; retagging pucora/velonetics:${VERSION} as pucora"
+            docker pull "pucora/velonetics:${VERSION}"
+            docker tag "pucora/velonetics:${VERSION}" "pucora/pucora:${IMAGE_TAG}"
+            docker tag "pucora/velonetics:${VERSION}" "pucora/pucora:${VERSION}"
           fi
 
-          docker push "niteesh20/pucora:${IMAGE_TAG}"
-          docker push "niteesh20/pucora:${VERSION}"
+          docker push "pucora/pucora:${IMAGE_TAG}"
+          docker push "pucora/pucora:${VERSION}"
 
   helm-chart:
     name: Publish Helm chart to OCI

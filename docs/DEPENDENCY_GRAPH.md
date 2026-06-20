@@ -21,19 +21,19 @@ If you want PR dependency warnings later:
 
 > The pucora org does not allow CI to submit the graph automatically (`dependency-graph: write` is blocked). An admin must flip the setting in the GitHub UI.
 
-## Docker Hub (niteesh20)
+## Docker Hub (pucora)
 
-Images are published to **[niteesh20/pucora](https://hub.docker.com/r/niteesh20/pucora)**.
+Images are published to **[pucora/pucora](https://hub.docker.com/r/pucora/pucora)**.
 
 Add these secrets under [pucora-ce → Settings → Secrets → Actions](https://github.com/pucora/pucora-ce/settings/secrets/actions):
 
 | Secret | Value |
 |--------|-------|
-| `DOCKER_USERNAME` | `niteesh20` |
+| `DOCKER_USERNAME` | `pucora` |
 | `DOCKER_PASSWORD` | A Docker Hub access token (not your account password) |
 
 Create a token at [Docker Hub → Account Settings → Security](https://hub.docker.com/settings/security).
 
-On each GitHub release, the **Handle Release** workflow builds and pushes `niteesh20/pucora:$TAG`.
+On each GitHub release, the **Handle Release** workflow builds and pushes `pucora/pucora:$TAG`.
 
 Optional secrets for signed `.deb`/`.rpm` packages: `PGP_SIGNING_KEY`, `PGP_PASSPHRASE`.
