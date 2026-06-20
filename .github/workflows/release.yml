@@ -11,7 +11,7 @@ name: Handle Release
 env:
   DOCKER_HUB_USER: pucora
   RELEASE_TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
-  CHECKOUT_REF: ${{ github.event_name == 'workflow_dispatch' && github.sha || (github.event.release.tag_name || github.event.inputs.tag) }}
+  CHECKOUT_REF: ${{ github.event.release.tag_name || github.event.inputs.tag }}
 jobs:
   gate:
     name: Check release credentials
@@ -246,6 +246,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build or retag Pucora image on Docker Hub
+        env:
+          GOWORK: off
+          GOPRIVATE: github.com/pucora/*
+          GOSUMDB: off
+          GOPROXY: direct
         run: |
           IMAGE_TAG="${RELEASE_TAG}"
           VERSION="${IMAGE_TAG#v}"
