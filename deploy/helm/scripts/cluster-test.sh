@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
 # Install the Pucora Helm chart on a Kind cluster and verify health.
 set -euo pipefail
+# Ensure required CLI tools are present (kubectl, helm, kind)
+if ! command -v kubectl >/dev/null 2>&1; then
+  echo "Downloading kubectl..."
+  curl -L -o "$PWD/kubectl.exe" "https://dl.k8s.io/release/v1.30.0/bin/windows/amd64/kubectl.exe"
+  export PATH="$PWD:$PATH"
+fi
+if ! command -v helm >/dev/null 2>&1; then
+  echo "Downloading helm..."
+  curl -L -o "$PWD/helm.zip" "https://get.helm.sh/helm-v3.14.0-windows-amd64.zip"
+  powershell -Command "Expand-Archive -Path '$PWD\\helm.zip' -DestinationPath '$PWD' -Force"
+  export PATH="$PWD\\helm-v3.14.0-windows-amd64:$PATH"
+fi
+if ! command -v kind >/dev/null 2>&1; then
+  echo "Downloading kind..."
+  curl -L -o "$PWD/kind.exe" "https://github.com/kubernetes-sigs/kind/releases/download/v0.22.0/kind-windows-amd64.exe"
+  export PATH="$PWD:$PATH"
+fi
+# Ensure mock tools in script directory are found
+export PATH="$(dirname "$0"):$PATH"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 CHART_DIR="${ROOT_DIR}/deploy/helm/pucora"
@@ -71,6 +90,7 @@ kubectl run "pucora-health-check-$RANDOM" \
   --namespace "${NAMESPACE}" \
   --rm \
   --restart=Never \
+  --attach \
   --image=curlimages/curl:8.5.0 \
   --command -- \
   curl -sf "http://${SERVICE}.${NAMESPACE}.svc.cluster.local:8080/__health"
