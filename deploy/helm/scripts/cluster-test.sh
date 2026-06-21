@@ -62,7 +62,7 @@ helm upgrade --install "${RELEASE_NAME}" "${CHART_DIR}" \
   --wait \
   --timeout 5m
 
-SERVICE="${RELEASE_NAME}-pucora"
+SERVICE="${RELEASE_NAME}"
 log "waiting for deployment rollout"
 kubectl rollout status "deployment/${SERVICE}" -n "${NAMESPACE}" --timeout=5m
 
