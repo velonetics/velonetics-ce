@@ -11,15 +11,15 @@ require (
 	github.com/pucora/pucora-amqp/v2 v2.0.4
 	github.com/pucora/pucora-apikeys/v2 v2.0.1
 	github.com/pucora/pucora-audit v1.0.2
-	github.com/pucora/pucora-aws-sigv4/v2 v2.0.0
-	github.com/pucora/pucora-basicauth/v2 v2.0.0
+	github.com/pucora/pucora-aws-sigv4/v2 v2.0.1
+	github.com/pucora/pucora-basicauth/v2 v2.0.1
 	github.com/pucora/pucora-botdetector/v2 v2.0.1
 	github.com/pucora/pucora-cel/v2 v2.0.1
 	github.com/pucora/pucora-circuitbreaker/v3 v3.0.1
 	github.com/pucora/pucora-cobra/v2 v2.0.1
 	github.com/pucora/pucora-cors/v2 v2.0.1
 	github.com/pucora/pucora-flexibleconfig/v2 v2.0.1
-	github.com/pucora/pucora-gcp-auth/v2 v2.0.0
+	github.com/pucora/pucora-gcp-auth/v2 v2.0.1
 	github.com/pucora/pucora-gelf/v2 v2.0.1
 	github.com/pucora/pucora-gologging/v2 v2.0.1
 	github.com/pucora/pucora-grpc/v2 v2.0.8
@@ -34,7 +34,7 @@ require (
 	github.com/pucora/pucora-lua/v2 v2.0.1
 	github.com/pucora/pucora-martian/v2 v2.0.1
 	github.com/pucora/pucora-metrics/v2 v2.0.1
-	github.com/pucora/pucora-ntlm/v2 v2.0.0
+	github.com/pucora/pucora-ntlm/v2 v2.0.1
 	github.com/pucora/pucora-oauth2-clientcredentials/v2 v2.0.1
 	github.com/pucora/pucora-opencensus/v2 v2.0.1
 	github.com/pucora/pucora-otel v1.0.1
