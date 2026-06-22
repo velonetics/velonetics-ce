@@ -26,7 +26,8 @@ func (flightsServer) FindFlight(_ context.Context, _ *flightfinder.FindFlightReq
 
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
-		conn, err := net.Dial("tcp", "localhost:4242")
+		addr := envOr("LISTEN_ADDR", ":4242")
+		conn, err := net.Dial("tcp", addr)
 		if err != nil {
 			log.Printf("healthcheck failed: %v", err)
 			os.Exit(1)
