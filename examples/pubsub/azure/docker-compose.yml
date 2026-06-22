@@ -12,14 +12,7 @@ services:
       start_period: 20s
 
   servicebus-emulator:
-    build:
-      dockerfile_inline: |
-        FROM alpine:latest AS download
-        RUN apk add --no-cache curl jq && \
-            curl -sSfL "https://raw.githubusercontent.com/jeremy-morren/azure-service-bus-emulator-healthcheck/main/Download.sh" \
-            | /bin/sh -s - /Healthcheck
-        FROM mcr.microsoft.com/azure-messaging/servicebus-emulator:latest AS final
-        COPY --from=download --chmod=500 /Healthcheck /Healthcheck
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
     ports:
       - "5672:5672"
       - "5300:5300"
@@ -34,12 +27,11 @@ services:
       sqledge:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "/Healthcheck/ServiceBusEmulator.Healthcheck"]
+      test: ["CMD", "curl", "-f", "http://localhost:5300/health"]
       interval: 10s
-      timeout: 3s
-      retries: 5
-      start_interval: 3s
-      start_period: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
   pucora:
     build:
@@ -55,5 +47,5 @@ services:
       - ./pucora.json:/etc/pucora/pucora.json:ro
     depends_on:
       servicebus-emulator:
-        condition: service_started
+        condition: service_healthy
     command: ["run", "-c", "/etc/pucora/pucora.json"]
