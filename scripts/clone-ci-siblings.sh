@@ -39,7 +39,7 @@ clone_endpoints() {
   clone pucora-jmespath v1.0.1
   clone pucora-response-body v1.0.1
   clone pucora-request-body v1.0.1
-  clone pucora-jsonschema v2.0.3
+  clone pucora-jsonschema v2.0.4
   clone pucora-security-policies v1.0.1
   clone pucora-wildcard v1.0.1
   clone pucora-ratelimit v3.0.3

@@ -1,6 +1,6 @@
 module github.com/pucora/pucora-ce/v2
 
-go 1.26.2
+go 1.26.4
 
 require (
 	github.com/coder/websocket v1.8.13
@@ -27,7 +27,7 @@ require (
 	github.com/pucora/pucora-httpsecure/v2 v2.0.1
 	github.com/pucora/pucora-influx/v2 v2.0.1
 	github.com/pucora/pucora-jose/v2 v2.0.1
-	github.com/pucora/pucora-jsonschema/v2 v2.0.3
+	github.com/pucora/pucora-jsonschema/v2 v2.0.4
 	github.com/pucora/pucora-koanf v1.0.1
 	github.com/pucora/pucora-lambda/v2 v2.0.1
 	github.com/pucora/pucora-logstash/v2 v2.0.1
@@ -47,7 +47,7 @@ require (
 	github.com/pucora/pucora-xml/v2 v2.0.1
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 	github.com/spf13/cobra v1.9.1
-	golang.org/x/sync v0.20.0
+	golang.org/x/sync v0.21.0
 )
 
 require github.com/soheilhy/cmux v0.1.5 // indirect
@@ -239,7 +239,7 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
 	github.com/rs/cors v1.11.1 // indirect
 	github.com/rs/cors/wrapper/gin v0.0.0-20240830163046-1084d89a1692 // indirect
-	github.com/russellhaering/goxmldsig v1.5.0 // indirect
+	github.com/russellhaering/goxmldsig v1.6.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/segmentio/kafka-go v0.4.51 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
@@ -292,13 +292,13 @@ require (
 	gocloud.dev/pubsub/rabbitpubsub v0.45.0 // indirect
 	gocloud.dev/secrets/hashivault v0.45.0 // indirect
 	golang.org/x/arch v0.22.0 // indirect
-	golang.org/x/crypto v0.52.0
+	golang.org/x/crypto v0.53.0
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
-	golang.org/x/mod v0.35.0 // indirect
-	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/mod v0.36.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
-	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	google.golang.org/api v0.272.0 // indirect
