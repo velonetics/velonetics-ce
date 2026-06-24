@@ -316,4 +316,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-
+replace github.com/pucora/pucora-yaml/v2 => D:/github/pucora/pucora/pucora-yaml/v2
