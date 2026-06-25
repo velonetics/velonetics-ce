@@ -7,7 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-contrib/uuid v1.2.0
 	github.com/pucora/bloomfilter/v2 v2.0.1
-	github.com/pucora/lura/v2 v2.0.9
+	github.com/pucora/lura/v2 v2.0.10
 	github.com/pucora/pucora-amqp/v2 v2.0.4
 	github.com/pucora/pucora-apikeys/v2 v2.0.1
 	github.com/pucora/pucora-audit v1.0.2
@@ -45,12 +45,16 @@ require (
 	github.com/pucora/pucora-usage/v2 v2.0.1
 	github.com/pucora/pucora-websocket/v2 v2.0.8
 	github.com/pucora/pucora-xml/v2 v2.0.1
+	github.com/pucora/pucora-yaml/v2 v2.0.1
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 	github.com/spf13/cobra v1.9.1
 	golang.org/x/sync v0.21.0
 )
 
-require github.com/soheilhy/cmux v0.1.5 // indirect
+require (
+	github.com/soheilhy/cmux v0.1.5 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+)
 
 require (
 	cel.dev/expr v0.25.1 // indirect
